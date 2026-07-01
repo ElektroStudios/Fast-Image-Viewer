@@ -90,7 +90,8 @@ FIV is designed to be fully controlled via keyboard for maximum comfort:
   * `.png`
   * `.tif` / `.tiff`
   * `.webp`
-Any other image format inside a directory is completely ignored by the viewer.
+
+  Any other image format inside a directory is completely ignored by the viewer.
 
 ## 📝 Requirements
 
