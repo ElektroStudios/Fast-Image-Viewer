@@ -84,7 +84,13 @@ FIV is designed to be fully controlled via keyboard for maximum comfort:
 
 ## ⚠️ Limitations
 
-* **Supported File Extensions:** **FIV** supports only a limited set of image format: `.jpg` / `.jpeg`, `.png`, `.bmp`, `.tif` / `.tiff` and `.webp`. Any other image format inside the directory is completely ignored during folder scans.
+* **Supported Formats:** **FIV** only opens the following extensions:
+  * `.bmp`
+  * `.jpg` / `.jpeg`
+  * `.png`
+  * `.tif` / `.tiff`
+  * `.webp`
+* Any other image format inside a directory is completely ignored by the viewer.
 
 ## 📝 Requirements
 
