@@ -29,7 +29,7 @@ desktopapplication
 windowsapplication 
  -->
 
-# <img src="Images/app.ico" width="48" align="center"> Fast Image Viewer (FIV)
+# <img src="/Images/app.ico" width="48" align="center"> Fast Image Viewer (FIV)
 
 ### A minimalist, high-performance image viewer written purely in VB.NET and powered by a smart background-caching engine for lag-free navigation.
 
