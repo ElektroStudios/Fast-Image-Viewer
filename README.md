@@ -50,8 +50,8 @@ While you are looking at the current picture, **FIV**'s background engine is alr
 
 I decided to develop this application because I was sick of the consecutive freezes and stuttering in my everyday image viewer while navigating through thousands of wallpapers, and I couldn't find any free or paid alternative on the market that allowed me to pre-load a specific number of images into my available RAM for instant viewing.
 
-##### ⚡ Performance Claim
-###### Is **FIV** officially the fastest image viewer in the world? Maybe.
+##### ⚡ The Real Question
+###### Is **FIV** officially the fastest image viewer in the world right now? Maybe.
 
 ## 🖼️ Screenshots
 
