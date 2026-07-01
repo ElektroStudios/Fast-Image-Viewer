@@ -82,6 +82,10 @@ FIV is designed to be fully controlled via keyboard for maximum comfort:
 | `Arrows` (in 1:1 view) | Pan image Up / Down / Left / Right |
 | `Left Click + Drag` (in 1:1 view) | Pan image freely |
 
+## ⚠️ Limitations
+
+* **Supported File Extensions:** **FIV** supports only a limited set of image format: `.jpg` / `.jpeg`, `.png`, `.bmp`, `.tif` / `.tiff` and `.webp`. Any other image format inside the directory is completely ignored during folder scans.
+
 ## 📝 Requirements
 
 - Microsoft Windows OS (64-Bit).
