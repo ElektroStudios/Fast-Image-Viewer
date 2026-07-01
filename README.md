@@ -1,11 +1,7 @@
 <!-- Common Project Tags:
-command-line 
-console-applications 
 desktop-app 
 desktop-application 
 dotnet 
-dotnet-core 
-netcore 
 netframework 
 netframework48 
 tool 
@@ -18,40 +14,76 @@ windows-application
 windows-applications 
 windows-forms 
 winforms 
+image 
+viewer 
+images 
+image-viewer 
+file-viewer 
+image-visualizer 
+windowsapp 
+desktopapp 
+image-view 
+image-visualization 
+image-caching 
+desktopapplication 
+windowsapplication 
  -->
 
-# PROJECT NAME
+# Fast Image Viewer (FIV)
 
-### PROJECT DESCRIPTION
+### A minimalist, high-performance image viewer written purely in VB.NET and powered by a smart background-caching engine for lag-free navigation.
 
 ------------------
 
 ## 👋 Introduction
 
-INTRODUCTION TEXT
+**FIV** is a responsive image viewer built with one primary goal: zero loading lag. At its core is a custom-built, multi-threaded Smart Image Cache system that completely eliminates the blocking waiting times usually associated with browsing heavy, high-resolution images. 
+
+While you are looking at the current picture, **FIV**'s background engine is already silently reading the disk, pre-loading the upcoming files directly into memory. When you press the next or previous key, the image is instantly displayed from RAM. No bottlenecks, no disk stutter, just instant rendering.
 
 ## 👌 Features
 
-FEATURES TEXT
+* **Smart Asymmetric Caching:** The heart of **FIV**. A dedicated background worker thread pre-loads images ahead of and behind your current position. You configure the cache radius (e.g., 50 images forward, 5 backward), and the engine handles the memory management. Evicted images are automatically disposed of without blocking the UI.
+* **1:1 True Size View:** Instantly toggle actual pixel size with a double-click and pan massive images smoothly via mouse drag or keyboard steps.
+* **Rapid File Management:** Copy files, convert image formats, move them to custom directories, or delete them directly from the viewer using single keystrokes.
+* **Unrestricted Long Path Support:** Native bypass for the Windows 260-character MAX_PATH limit. It handles extremely deep and complex folder structures flawlessly.
+* **Keyboard-Driven & Responsive:** Built for power users. Navigate rapidly, rotate, and zoom with zero interface clutter getting in your way.
+
+## ⌨️ Hotkeys & Navigation
+
+FIV is designed to be fully controlled via keyboard for maximum speed.
+
+| Key / Input | Action |
+| :--- | :--- |
+| `Right Arrow` / `PageDown` | Next image |
+| `Left Arrow` / `PageUp` / `Backspace` | Previous image |
+| `Home` / `End` | Jump to First / Last image in directory |
+| `+` / `-` | Zoom In / Zoom Out |
+| `L` / `R` | Rotate image Left / Right |
+| `Delete` | Send to Recycle Bin (or move to Custom Folder, depending on settings) |
+| `Shift` + `Delete` | Permanently delete file from disk |
+| `Escape` | Exit Fullscreen or Exit 1:1 True Size view |
+| `Middle Click` | Toggle Fullscreen mode |
+| `Double Click` | Toggle 1:1 True Size view |
+| `Mouse Wheel` | Next / Previous image |
+| `Arrows` (in 1:1 view) | Pan image Up / Down / Left / Right |
+| `Left Click + Drag` (in 1:1 view) | Pan image freely |
 
 ## 🖼️ Screenshots
 
-![screenshot](/Images/screenshot.png)
+![FIV screenshot 1](/Images/screenshot1.png)
 
 ## 🎦 Videos
 
-<!-- Download a recorded video by clicking [here](/Video/video.mp4) -->
-
-<!-- See a recorded video by clicking on the following button:
-[![PROJECT_NAME DEMO VIDEO](Images/demo_video.jpg)](https://www.youtube.com/watch?v=XXXXXXXXX)  -->
+[FIV DEMO VIDEO](https://github.com/user-attachments/assets/2cf72b93-6007-4383-af50-a986469bbd1c)
 
 ## 📝 Requirements
 
-- Microsoft Windows OS.
+- Microsoft Windows OS (64-Bit).
 
 ## 🤖 Getting Started
 
-Download the latest compilation by clicking [here](https://github.com/ElektroStudios/PROJECT_NAME/releases/latest).
+Download the latest release by clicking [here](https://github.com/ElektroStudios/Fast-Image-Viewer/releases/latest) and start using it!.
 
 ## 🔄 Change Log
 
@@ -71,7 +103,7 @@ This Work has no affiliation, approval or endorsement by the author(s) of the th
 
 ## 💪 Contributing
 
-Your contribution is highly appreciated!. If you have any ideas, suggestions, or encounter issues, feel free to open an issue by clicking [here](https://github.com/ElektroStudios/PROJECT_NAME/issues/new/choose). 
+Your contribution is highly appreciated!. If you have any ideas, suggestions, or encounter issues, feel free to open an issue by clicking [here](https://github.com/ElektroStudios/Fast-Image-Viewer/issues/new/choose). 
 
 Your input helps make this Work better for everyone. Thank you for your support! 🚀
 

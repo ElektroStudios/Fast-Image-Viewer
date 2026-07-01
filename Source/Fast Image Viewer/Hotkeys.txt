@@ -1,0 +1,22 @@
+===============================================================================
+ FAST IMAGE VIEWER - HOTKEYS & NAVIGATION
+===============================================================================
+
+FIV is designed to be fully controlled via keyboard for maximum comfort:
+
+  KEY / INPUT                             ACTION
+-------------------------------------------------------------------------------
+  Right Arrow / PageDown              |  Next image
+  Left Arrow / PageUp / Backspace     |  Previous image
+  Home / End                          |  Jump to First / Last image
+  + / -                               |  Zoom In / Zoom Out
+  L / R                               |  Rotate image Left / Right
+  Delete                              |  Send to Recycle Bin / Custom Folder
+  Shift + Delete                      |  Permanently delete file from disk
+  Escape                              |  Exit Fullscreen / Exit 1:1 view
+  Middle Click                        |  Toggle Fullscreen mode
+  Double Click                        |  Toggle 1:1 True Size view
+  Mouse Wheel                         |  Next / Previous image
+  Arrows (in 1:1 view)                |  Pan image Up / Down / Left / Right
+  Left Click + Drag (in 1:1 view)     |  Pan image freely
+-------------------------------------------------------------------------------
