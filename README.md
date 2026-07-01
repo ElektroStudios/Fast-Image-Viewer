@@ -86,14 +86,14 @@ FIV is designed to be fully controlled via keyboard for maximum comfort:
 
 * **Supported Formats**
 
-  **FIV** only read the following file extensions:
+  **FIV** reads only files with the following extensions:
   * `.bmp`
   * `.jpg` / `.jpeg`
   * `.png`
   * `.tif` / `.tiff`
   * `.webp`
 
-  Any other file extension or image format inside a directory is completely ignored by the viewer.
+  Any other file extension or image format inside a directory is entirely ignored by the viewer.
 
 ## 📝 Requirements
 
