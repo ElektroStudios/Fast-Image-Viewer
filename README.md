@@ -29,8 +29,12 @@ desktopapplication
 windowsapplication 
  -->
 
-# <img src="https://github.com/ElektroStudios/Fast-Image-Viewer/blob/main/Images/App.ico" width="48" style="vertical-align: middle; margin-right: 10px;"> <span style="vertical-align: middle;">Fast Image Viewer (FIV)</span>
-
+<table>
+  <tr>
+    <td><img src="https://github.com/ElektroStudios/Fast-Image-Viewer/blob/main/Images/App.ico" width="48"></td>
+    <td><h1>Fast Image Viewer (FIV)</h1></td>
+  </tr>
+</table>
 ### A minimalist, high-performance image viewer written purely in VB.NET and powered by a smart background-caching engine for lag-free navigation.
 
 ------------------
