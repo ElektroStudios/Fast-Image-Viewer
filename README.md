@@ -46,6 +46,12 @@ windowsapplication
 
 While you are looking at the current picture, **FIV**'s background engine is already silently reading the disk, pre-loading the upcoming files directly into memory. When you press the next or previous key, the image is instantly displayed from RAM. No bottlenecks, no disk stutter, just instant rendering.
 
+💡 Motivation
+
+I decided to develop this application because I was sick of the consecutive freezes and stuttering in my everyday image viewer while navigating through thousands of wallpapers, and I couldn't find any alternative on the market that allowed me to pre-load a specific number of images into cache for instant rendering.
+
+Is **FIV** officially the fastest image viewer in the world? Maybe.
+
 ## 🖼️ Screenshots
 
 ![FIV screenshot 1](/Images/screenshot1.png)
