@@ -64,7 +64,7 @@ I decided to develop this application because I was sick of the consecutive free
 ## 👌 Features
 
 * **Smart Asymmetric Caching:** The heart of **FIV**. A dedicated background worker thread pre-loads images ahead of and behind your current position. You configure the cache radius (e.g., 50 images forward, 5 backward), and the engine handles the memory management. Evicted images are automatically disposed of without blocking the UI.
-* **Flexible Loading:** Open files and directories by dropping them straight onto the viewer, or through Command Line Interface (CLI) arguments.
+* **Flexible Loading:** Open files and directories through Command Line Interface (CLI) arguments, or by dropping them directly onto the viewer or the EXE file.
 * **1:1 True Size View:** Instantly toggle actual pixel size with a double-click and pan massive images smoothly via mouse drag or keyboard steps.
 * **Rapid File Management:** Copy files, convert image formats, move them to custom directories, or delete them directly from the viewer using single keystrokes.
 * **Unrestricted Long Path Support:** Native bypass for the Windows 260-character MAX_PATH limit. It handles extremely deep and complex folder structures flawlessly.
