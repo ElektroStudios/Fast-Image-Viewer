@@ -44,11 +44,11 @@ windowsapplication
 
 **FIV** is a responsive image viewer built with one primary goal: zero loading lag. At its core is a custom-built, multi-threaded Smart Image Cache system that completely eliminates the blocking waiting times usually associated with browsing heavy, high-resolution images. 
 
-While you are looking at the current picture, **FIV**'s background engine is already silently reading the disk, pre-loading the upcoming files directly into memory. When you press the next or previous key, the image is instantly displayed from RAM. No bottlenecks, no disk stutter, just instant rendering.
+While you are looking at the current picture, **FIV**'s background engine is already silently reading the disk, pre-loading the upcoming files directly into memory. When you press the next or previous key, the image is instantly displayed from RAM. No bottlenecks, no disk stutter, just instant viewing.
 
-💡 Motivation
+## 💡 Motivation
 
-I decided to develop this application because I was sick of the consecutive freezes and stuttering in my everyday image viewer while navigating through thousands of wallpapers, and I couldn't find any alternative on the market that allowed me to pre-load a specific number of images into cache for instant rendering.
+I decided to develop this application because I was sick of the consecutive freezes and stuttering in my everyday image viewer while navigating through thousands of wallpapers, and I couldn't find any free or paid alternative on the market that allowed me to pre-load a specific number of images into cache for instant viewing.
 
 Is **FIV** officially the fastest image viewer in the world? Maybe.
 
