@@ -41,6 +41,14 @@ windowsapplication
 
 While you are looking at the current picture, **FIV**'s background engine is already silently reading the disk, pre-loading the upcoming files directly into memory. When you press the next or previous key, the image is instantly displayed from RAM. No bottlenecks, no disk stutter, just instant rendering.
 
+## 🖼️ Screenshots
+
+![FIV screenshot 1](/Images/screenshot1.png)
+
+## 🎦 Videos
+
+[FIV DEMO VIDEO](https://github.com/user-attachments/assets/2cf72b93-6007-4383-af50-a986469bbd1c)
+
 ## 👌 Features
 
 * **Smart Asymmetric Caching:** The heart of **FIV**. A dedicated background worker thread pre-loads images ahead of and behind your current position. You configure the cache radius (e.g., 50 images forward, 5 backward), and the engine handles the memory management. Evicted images are automatically disposed of without blocking the UI.
@@ -51,7 +59,7 @@ While you are looking at the current picture, **FIV**'s background engine is alr
 
 ## ⌨️ Hotkeys & Navigation
 
-FIV is designed to be fully controlled via keyboard for maximum speed.
+FIV is designed to be fully controlled via keyboard for maximum comfort:
 
 | Key / Input | Action |
 | :--- | :--- |
@@ -68,14 +76,6 @@ FIV is designed to be fully controlled via keyboard for maximum speed.
 | `Mouse Wheel` | Next / Previous image |
 | `Arrows` (in 1:1 view) | Pan image Up / Down / Left / Right |
 | `Left Click + Drag` (in 1:1 view) | Pan image freely |
-
-## 🖼️ Screenshots
-
-![FIV screenshot 1](/Images/screenshot1.png)
-
-## 🎦 Videos
-
-[FIV DEMO VIDEO](https://github.com/user-attachments/assets/2cf72b93-6007-4383-af50-a986469bbd1c)
 
 ## 📝 Requirements
 
