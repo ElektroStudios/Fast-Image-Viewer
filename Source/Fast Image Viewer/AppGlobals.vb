@@ -19,7 +19,8 @@ Friend Module AppGlobals
         ".webp"
     }
 
-    Friend Const GitHubRepositoruUrl As String = ""
+    Friend Const GitHubRepositoruUrl As String =
+        "https://github.com/ElektroStudios/Fast-Image-Viewer"
 
     ''' <summary>
     ''' Milliseconds to wait before committing a navigation when keys

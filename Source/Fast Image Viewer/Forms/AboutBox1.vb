@@ -16,7 +16,8 @@
         Me.LabelVersion.Text = String.Format("Version {0}", My.Application.Info.Version.ToString)
         Me.LabelCopyright.Text = My.Application.Info.Copyright
         Me.LabelCompanyName.Text = My.Application.Info.CompanyName
-        Me.TextBoxDescription.Text = My.Application.Info.Description & Environment.NewLine & Environment.NewLine & AppGlobals.GitHubRepositoruUrl
+        Me.TextBoxDescription.Text = My.Application.Info.Description & Environment.NewLine & Environment.NewLine &
+                                     "Visit the official GitHub repository at:" & Environment.NewLine & AppGlobals.GitHubRepositoruUrl
     End Sub
 
     Private Sub OKButton_Click(sender As Object, e As EventArgs) Handles OKButton.Click
