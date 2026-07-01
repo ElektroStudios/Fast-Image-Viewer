@@ -100,6 +100,7 @@ This work relies on the following resources:
 
  - [.NET Framework](https://dotnet.microsoft.com/en-us/download/dotnet-framework)
  - [Ookii.Dialogs](https://www.ookii.org/software/dialogs/)
+ - [Claude Opus 4 (Anthropic)](https://claude.ai/) - Assisted in writing code from scratch and refining core components.
 
 ## ⚠️ Disclaimer:
 
