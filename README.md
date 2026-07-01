@@ -84,7 +84,9 @@ FIV is designed to be fully controlled via keyboard for maximum comfort:
 
 ## ⚠️ Limitations
 
-* **Supported Formats:** **FIV** only opens the following extensions:
+* **Supported Formats**
+
+  **FIV** only read the following extensions:
   * `.bmp`
   * `.jpg` / `.jpeg`
   * `.png`
