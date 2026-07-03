@@ -61,6 +61,9 @@ I decided to develop this application because I was sick of the consecutive free
 
 [FIV DEMO VIDEO](https://github.com/user-attachments/assets/2cf72b93-6007-4383-af50-a986469bbd1c)
 
+Compare it with IrfanView (my everyday image viewer)
+[IrfanView comparison](https://github.com/user-attachments/assets/10234880-90b3-4c18-b300-182f66d1f077)
+
 ## 👌 Features
 
 * **Smart Asymmetric Caching:** The heart of **FIV**. A dedicated background worker thread pre-loads images ahead of and behind your current position. You configure the cache radius (e.g., 50 images forward, 5 backward), and the engine handles the memory management. Evicted images are automatically disposed of without blocking the UI.
