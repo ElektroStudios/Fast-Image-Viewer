@@ -61,7 +61,8 @@ I decided to develop this application because I was sick of the consecutive free
 
 [FIV DEMO VIDEO](https://github.com/user-attachments/assets/2cf72b93-6007-4383-af50-a986469bbd1c)
 
-Compare it with IrfanView (my everyday image viewer)
+Compare it with IrfanView (my everyday image viewer):
+
 [IrfanView comparison](https://github.com/user-attachments/assets/10234880-90b3-4c18-b300-182f66d1f077)
 
 ## 👌 Features
