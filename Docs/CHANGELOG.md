@@ -4,7 +4,7 @@
 
 My goal with this update is simple: keep turning **FIV** into the image viewer I'd actually want to use every day. ✅
 
-It still lacks many features found in professional image viewers. That said, **FIV** has never aspired to be a professional image viewer.
+It still lacks many features found in professional image viewers, though. That said, **FIV** has never aspired to be a professional image viewer.
 
 ### New Features
 - Added 'Slideshow' option to enable automatic image transitioning in fullscreen with custom interval settings.
