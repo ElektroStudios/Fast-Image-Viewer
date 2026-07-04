@@ -9,8 +9,8 @@ It still lacks many features found in professional image viewers, though. That s
 ### New Features
 - Added 'Slideshow' option to enable automatic image transitioning in fullscreen with custom interval settings.
 - Added 'Advanced' menu.
-- Added option in 'Advanced' men to set a millisecond delay between rapid forward and backward navigation events.
-- Added option in 'Advanced' men to to disable image resizing on load for higher quality at the cost of loading speed.
+- Added option in 'Advanced' menu to set a millisecond delay between rapid forward and backward navigation events.
+- Added option in 'Advanced' menu to disable image resizing on load for higher quality at the cost of loading speed.
 - Added 'Remember window size and position' option to remember and restore application window size and position on program startup.
 - Added 'Upscale small images to fit window' option to control whether small images are scaled up to fit the window.
 
