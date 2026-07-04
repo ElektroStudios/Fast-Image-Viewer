@@ -50,6 +50,8 @@ While you are looking at the current picture, **FIV**'s background engine is alr
 
 I decided to develop this application because I was sick of the consecutive freezes and stuttering in my everyday image viewer while navigating through thousands of wallpapers, and I couldn't find any free or paid alternative on the market that allowed me to pre-load a specific number of images into my available RAM for instant viewing.
 
+Initially started as a private, basic prompt-engineered tool for my personal workflow, the project grew into a comprehensive application that I am now sharing publicly as a free utility.
+
 ##### ⚡ The Real Question
 ###### Is **FIV** officially the fastest image viewer in the world right now?.
 
@@ -127,7 +129,8 @@ This work relies on the following resources:
 
  - [.NET Framework](https://dotnet.microsoft.com/en-us/download/dotnet-framework)
  - [Ookii.Dialogs](https://www.ookii.org/software/dialogs/)
- - [Claude 4 Opus (Anthropic)](https://claude.ai/) - Assisted in writing code from scratch and refining core components.
+ - [Anthropic Claude 4 Opus](https://claude.ai/) - Assisted in writing base code from scratch and refining core components.
+ - [Google Gemini Pro 3.1](https://gemini.google.com/app) - Assisted in refining core components and adding new features.
 
 ## ⚠️ Disclaimer:
 
