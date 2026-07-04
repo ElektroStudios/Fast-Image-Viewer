@@ -23,5 +23,29 @@
     <Setting Name="CustomFolderPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">.\Moved Images</Value>
     </Setting>
+    <Setting Name="UpscaleSmallImagestoFitWindow" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="SlideshowInternalSeconds" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="PauseBetweenFastforwardMilliseconds" Type="System.Int64" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="DisableImageResizingOnLoadFastLoad" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="RememberWindowState" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="SavedWindowLocation" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">0, 0</Value>
+    </Setting>
+    <Setting Name="SavedWindowSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">600, 480</Value>
+    </Setting>
+    <Setting Name="SavedWindowMaximized" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

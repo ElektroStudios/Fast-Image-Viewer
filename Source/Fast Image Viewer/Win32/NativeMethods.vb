@@ -46,6 +46,10 @@ Friend Module NativeMethods
     Friend Function StrCmpLogicalW(x As String, y As String) As Integer
     End Function
 
+    <DllImport("user32.dll", CharSet:=CharSet.Auto)>
+    Friend Function SendMessage(hWnd As IntPtr, Msg As Integer, wParam As Integer, lParam As Integer) As IntPtr
+    End Function
+
 End Module
 
 #End Region

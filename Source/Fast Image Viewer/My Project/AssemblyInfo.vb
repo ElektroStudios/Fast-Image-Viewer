@@ -12,7 +12,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyTitle("Fast Image Viewer")>
 <Assembly: AssemblyDescription("Fast image viewer with smart memory management designed for instant image rendering.")>
 <Assembly: AssemblyCompany("ElektroStudios")>
-<Assembly: AssemblyProduct("Fast Image Viewer")>
+<Assembly: AssemblyProduct("FIV")>
 <Assembly: AssemblyCopyright("Copyright © ElektroStudios 2026")>
 <Assembly: AssemblyTrademark("")>
 
@@ -29,6 +29,6 @@ Imports System.Runtime.InteropServices
 '      Revision
 '
 
-<Assembly: AssemblyVersion("1.0.0.0")>
-<Assembly: AssemblyFileVersion("1.0.0.0")>
+<Assembly: AssemblyVersion("1.0.1.0")>
+<Assembly: AssemblyFileVersion("1.0.1.0")>
 <Assembly: NeutralResourcesLanguage("en")>

@@ -15,7 +15,7 @@ Option Explicit On
 Namespace My
     
     <Global.System.Runtime.CompilerServices.CompilerGeneratedAttribute(),  _
-     Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "18.4.0.0"),  _
+     Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "18.7.0.0"),  _
      Global.System.ComponentModel.EditorBrowsableAttribute(Global.System.ComponentModel.EditorBrowsableState.Advanced)>  _
     Partial Friend NotInheritable Class MySettings
         Inherits Global.System.Configuration.ApplicationSettingsBase
@@ -135,6 +135,102 @@ Namespace My
             End Get
             Set
                 Me("CustomFolderPath") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property UpscaleSmallImagestoFitWindow() As Boolean
+            Get
+                Return CType(Me("UpscaleSmallImagestoFitWindow"),Boolean)
+            End Get
+            Set
+                Me("UpscaleSmallImagestoFitWindow") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("3")>  _
+        Public Property SlideshowInternalSeconds() As Integer
+            Get
+                Return CType(Me("SlideshowInternalSeconds"),Integer)
+            End Get
+            Set
+                Me("SlideshowInternalSeconds") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+        Public Property PauseBetweenFastforwardMilliseconds() As Long
+            Get
+                Return CType(Me("PauseBetweenFastforwardMilliseconds"),Long)
+            End Get
+            Set
+                Me("PauseBetweenFastforwardMilliseconds") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property DisableImageResizingOnLoadFastLoad() As Boolean
+            Get
+                Return CType(Me("DisableImageResizingOnLoadFastLoad"),Boolean)
+            End Get
+            Set
+                Me("DisableImageResizingOnLoadFastLoad") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property RememberWindowState() As Boolean
+            Get
+                Return CType(Me("RememberWindowState"),Boolean)
+            End Get
+            Set
+                Me("RememberWindowState") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0, 0")>  _
+        Public Property SavedWindowLocation() As Global.System.Drawing.Point
+            Get
+                Return CType(Me("SavedWindowLocation"),Global.System.Drawing.Point)
+            End Get
+            Set
+                Me("SavedWindowLocation") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("600, 480")>  _
+        Public Property SavedWindowSize() As Global.System.Drawing.Size
+            Get
+                Return CType(Me("SavedWindowSize"),Global.System.Drawing.Size)
+            End Get
+            Set
+                Me("SavedWindowSize") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property SavedWindowMaximized() As Boolean
+            Get
+                Return CType(Me("SavedWindowMaximized"),Boolean)
+            End Get
+            Set
+                Me("SavedWindowMaximized") = value
             End Set
         End Property
     End Class

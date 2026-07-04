@@ -62,6 +62,10 @@ Public NotInheritable Class Form1 : Inherits Form
     ' la carga del radius cache, lo que retrasaría WM_TIMER y causaría saltos de imagen.
     Private _pendingProgressInvoke As Integer = 0
 
+    Private _isSlideshowActive As Boolean = False
+    Private WithEvents SlideshowTimer As New System.Windows.Forms.Timer()
+    Private _lastNavTime As Date = Date.MinValue
+
     '  CONTROLS
     ' ═══════════════════════════════════════════════════════════════
     Private WithEvents AboutBox As New AboutBox1
@@ -111,6 +115,19 @@ Public NotInheritable Class Form1 : Inherits Form
     Private WithEvents MenuItemDelKeyBehavior As ToolStripMenuItem
     Private WithEvents MenuItemCustomFolderName As ToolStripMenuItem
     Private WithEvents CustomFolderTextBox As ToolStripTextBox
+    Private WithEvents MenuItemRememberWindowState As ToolStripMenuItem
+    Private WithEvents MenuItemUpscaleSmallImages As ToolStripMenuItem
+
+    Private WithEvents MenuItemAdvanced As ToolStripMenuItem
+    Private WithEvents MenuItemAdvancedWarning As ToolStripLabel
+    Private WithEvents MenuItemDisableFastLoadResize As ToolStripMenuItem
+    Private NumFastForwardPauseHost As ToolStripControlHost
+    Private NumFastForwardPauseCtrl As NumericUpDown
+
+    Private WithEvents MenuItemSlideshow As ToolStripMenuItem
+    Private WithEvents MenuItemStartSlideshow As ToolStripMenuItem
+    Private NumSlideshowIntervalHost As ToolStripControlHost
+    Private NumSlideshowIntervalCtrl As NumericUpDown
 
     Private NumForwardHost As ToolStripControlHost
     Private NumBackHost As ToolStripControlHost
@@ -213,6 +230,36 @@ Public NotInheritable Class Form1 : Inherits Form
         End Get
     End Property
 
+    Private ReadOnly Property UPSCALE_SMALL_IMAGES_TO_FIT_WINDOW As Boolean
+        Get
+            Return My.Settings.UpscaleSmallImagestoFitWindow
+        End Get
+    End Property
+
+    Private ReadOnly Property SLIDESHOW_INTERVAL_SECONDS As Integer
+        Get
+            Return My.Settings.SlideshowInternalSeconds
+        End Get
+    End Property
+
+    Private ReadOnly Property PAUSE_BETWEEN_FASTFORWARD_MILLISECONDS As Long
+        Get
+            Return My.Settings.PauseBetweenFastforwardMilliseconds
+        End Get
+    End Property
+
+    Private ReadOnly Property DISABLE_IMAGERESIZING_ON_LOAD_FASTLOAD As Boolean
+        Get
+            Return My.Settings.DisableImageResizingOnLoadFastLoad
+        End Get
+    End Property
+
+    Private ReadOnly Property REMEMBER_WINDOW_STATE As Boolean
+        Get
+            Return My.Settings.RememberWindowState
+        End Get
+    End Property
+
 #End Region
 
 #Region " Constructor "
@@ -230,7 +277,15 @@ Public NotInheritable Class Form1 : Inherits Form
 
     Protected Overrides Sub OnLoad(e As System.EventArgs)
         MyBase.OnLoad(e)
-        Me.WindowState = FormWindowState.Maximized
+
+        If Me.REMEMBER_WINDOW_STATE AndAlso My.Settings.SavedWindowSize.Width > 0 Then
+            Me.Location = My.Settings.SavedWindowLocation
+            Me.Size = My.Settings.SavedWindowSize
+            Me.WindowState = If(My.Settings.SavedWindowMaximized, FormWindowState.Maximized, FormWindowState.Normal)
+        Else
+            Me.WindowState = FormWindowState.Maximized
+        End If
+
         Me.LoadDirectory()
     End Sub
 
@@ -251,6 +306,19 @@ Public NotInheritable Class Form1 : Inherits Form
     End Sub
 
     Protected Overrides Sub OnFormClosing(e As FormClosingEventArgs)
+
+        If Me.REMEMBER_WINDOW_STATE Then
+            My.Settings.SavedWindowMaximized = (Me.WindowState = FormWindowState.Maximized)
+            If Me.WindowState = FormWindowState.Normal Then
+                My.Settings.SavedWindowLocation = Me.Location
+                My.Settings.SavedWindowSize = Me.Size
+            Else
+                My.Settings.SavedWindowLocation = Me.RestoreBounds.Location
+                My.Settings.SavedWindowSize = Me.RestoreBounds.Size
+            End If
+            My.Settings.Save()
+        End If
+
         Me._cancelWorker = True
         Me._wakeSignal.Set()
 
@@ -314,21 +382,6 @@ Public NotInheritable Class Form1 : Inherits Form
 
             Case Keys.Back
                 Me.NavigatePrev()
-                e.Handled = True
-
-            Case Keys.Delete
-                Dim permanentDeletion As Boolean = e.Shift
-
-                If permanentDeletion Then
-                    Me.DeleteCurrentImage(permanentDeletion:=True)
-
-                ElseIf My.Settings.DelKeyMovesImageToCustomFolder Then
-                    Me.MoveCurrentImageToCustomDir()
-
-                Else
-                    Me.DeleteCurrentImage(permanentDeletion:=False)
-                End If
-
                 e.Handled = True
 
             Case Keys.L
@@ -568,7 +621,7 @@ Public NotInheritable Class Form1 : Inherits Form
                 Exit For
             End Try
 #If DEBUG Then
-        Thread.CurrentThread.Join(0) ' Prevents ContextSwitchDeadlock on long-running loops
+            Thread.CurrentThread.Join(0) ' Prevents ContextSwitchDeadlock on long-running loops
 #End If
         Next
 
@@ -737,7 +790,20 @@ Public NotInheritable Class Form1 : Inherits Form
                     Dim imageToSave As Image = getcachedimg.Bitmap
 
                     If imageToSave IsNot Nothing Then
-                        imageToSave.Save(saveDialog.FileName, imageFormatToSave)
+                        Using bmpToSave As Bitmap = DirectCast(imageToSave.Clone(), Bitmap)
+
+                            Select Case Me._rotationAngle
+                                Case 90
+                                    bmpToSave.RotateFlip(RotateFlipType.Rotate90FlipNone)
+                                Case 180
+                                    bmpToSave.RotateFlip(RotateFlipType.Rotate180FlipNone)
+                                Case 270
+                                    bmpToSave.RotateFlip(RotateFlipType.Rotate270FlipNone)
+                            End Select
+
+                            bmpToSave.Save(saveDialog.FileName, imageFormatToSave)
+                        End Using
+
                         MessageBox.Show($"Image successfully saved to: {saveDialog.FileName}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     Else
                         MessageBox.Show("The cached image object does not contain valid image data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -896,6 +962,86 @@ Public NotInheritable Class Form1 : Inherits Form
         Me.CustomFolderTextBox.Text = finalValue
         My.Settings.CustomFolderPath = finalValue
         My.Settings.Save()
+    End Sub
+
+    Private Sub MenuItemRememberWindowState_Click(sender As Object, e As EventArgs) Handles MenuItemRememberWindowState.Click
+        My.Settings.RememberWindowState = Me.MenuItemRememberWindowState.Checked
+        My.Settings.Save()
+    End Sub
+
+    Private Sub MenuItemUpscaleSmallImages_Click(sender As Object, e As EventArgs) Handles MenuItemUpscaleSmallImages.Click
+
+        My.Settings.UpscaleSmallImagestoFitWindow = Me.MenuItemUpscaleSmallImages.Checked
+        My.Settings.Save()
+
+        If Me._imageFiles Is Nothing OrElse Me._imageFiles.Length = 0 Then
+            Exit Sub
+        End If
+
+        Me.StopWorkerAndClearCache()
+
+        SyncLock Me._indexLock
+            Me._lastWorkerCenter = -1
+        End SyncLock
+
+        Me.StartWorker()
+        Me.DisplayCurrentImage()
+    End Sub
+
+    Private Sub MenuItemDisableFastLoadResize_Click(sender As Object, e As EventArgs) Handles MenuItemDisableFastLoadResize.Click
+
+        My.Settings.DisableImageResizingOnLoadFastLoad = Me.MenuItemDisableFastLoadResize.Checked
+        My.Settings.Save()
+
+        If Me._imageFiles Is Nothing OrElse Me._imageFiles.Length = 0 Then
+            Exit Sub
+        End If
+
+        Me.StopWorkerAndClearCache()
+
+        SyncLock Me._indexLock
+            Me._lastWorkerCenter = -1
+        End SyncLock
+
+        Me.StartWorker()
+        Me.DisplayCurrentImage()
+    End Sub
+
+    Private Sub NumFastForwardPauseCtrl_ValueChanged(sender As Object, e As EventArgs)
+
+        My.Settings.PauseBetweenFastforwardMilliseconds = CLng(Me.NumFastForwardPauseCtrl.Value)
+        My.Settings.Save()
+    End Sub
+
+    Private Sub NumSlideshowIntervalCtrl_ValueChanged(sender As Object, e As EventArgs)
+
+        My.Settings.SlideshowInternalSeconds = CInt(Me.NumSlideshowIntervalCtrl.Value)
+        My.Settings.Save()
+
+        If Me._isSlideshowActive Then
+            Me.SlideshowTimer.Interval = Me.SLIDESHOW_INTERVAL_SECONDS * 1000 ' ms
+        End If
+    End Sub
+
+    Private Sub MenuItemStartSlideshow_Click(sender As Object, e As EventArgs) Handles MenuItemStartSlideshow.Click
+        If Me._isSlideshowActive Then
+            Me.StopSlideshow()
+        Else
+            Me.StartSlideshow()
+        End If
+    End Sub
+
+    Private Sub SlideshowTimer_Tick(sender As Object, e As EventArgs) Handles SlideshowTimer.Tick
+        If Me._imageFiles.Length = 0 Then
+            Me.StopSlideshow()
+            Return
+        End If
+
+        If Me._currentIndex = Me._imageFiles.Length - 1 Then
+            Me.NavigateFirst()
+        Else
+            Me.NavigateNext()
+        End If
     End Sub
 
     Private Sub CacheRadius_ValueChanged(sender As Object, e As EventArgs)
@@ -1151,6 +1297,22 @@ Public NotInheritable Class Form1 : Inherits Form
 
         Select Case keyData
 
+            Case Keys.Delete, Keys.Delete Or Keys.Shift
+                If TypeOf Me.ActiveControl Is TextBoxBase OrElse (Me.ActiveControl IsNot Nothing AndAlso Me.ActiveControl.GetType().Name.Contains("TextBox")) Then
+                    Return MyBase.ProcessCmdKey(msg, keyData)
+                End If
+
+                Dim permanentDeletion As Boolean = (keyData And Keys.Shift) = Keys.Shift
+
+                If permanentDeletion Then
+                    Me.DeleteCurrentImage(permanentDeletion:=True)
+                ElseIf My.Settings.DelKeyMovesImageToCustomFolder Then
+                    Me.MoveCurrentImageToCustomDir()
+                Else
+                    Me.DeleteCurrentImage(permanentDeletion:=False)
+                End If
+                Return True
+
             Case Keys.Left
                 If Me._isActualSize Then Me.ScrollActualSize(-PAN_KEY_STEP, 0) Else Me.NavigatePrev()
                 Return True
@@ -1189,10 +1351,12 @@ Public NotInheritable Class Form1 : Inherits Form
 #Region " Private Methods "
 
     Private Sub BuildUI()
-        Me.Text = $"{My.Application.Info.Title} {My.Application.Info.Version.ToString(fieldCount:=3)}"
+        Me.Text = $"{My.Application.Info.ProductName}"
         Me.BackColor = Color.FromArgb(10, 10, 10)
         Me.ForeColor = Color.WhiteSmoke
         Me.KeyPreview = True
+        Me.MinimumSize = New Size(400, 200)
+        Me.DoubleBuffered = True
 
         Me.NavTimer = New System.Windows.Forms.Timer With {
             .Interval = NAV_THROTTLE_MS,
@@ -1260,6 +1424,11 @@ Public NotInheritable Class Form1 : Inherits Form
             .Checked = Me.SHOW_PROGRESS_BAR
         }
 
+        Me.MenuItemUpscaleSmallImages = New ToolStripMenuItem("&Upscale small images to fit window") With {
+            .CheckOnClick = True,
+            .Checked = Me.UPSCALE_SMALL_IMAGES_TO_FIT_WINDOW
+        }
+
         ' Create NumericUpDown for Forward Radius
         Me.NumForwardCtrl = New NumericUpDown With {
             .Minimum = 1,
@@ -1296,6 +1465,11 @@ Public NotInheritable Class Form1 : Inherits Form
             .Checked = Me.ASK_FOR_DIRECTORY_PATH_AT_STARTUP
         }
 
+        Me.MenuItemRememberWindowState = New ToolStripMenuItem("Remember &window size and position") With {
+            .CheckOnClick = True,
+            .Checked = Me.REMEMBER_WINDOW_STATE
+        }
+
         Me.MenuItemDelKeyBehavior = New ToolStripMenuItem("'Del' key &moves the current image to custom folder") With {
             .CheckOnClick = True,
             .Checked = Me.DEL_KEY_MOVES_IMAGE_TO_CUSTOM_FOLDER
@@ -1304,7 +1478,7 @@ Public NotInheritable Class Form1 : Inherits Form
         Dim customFolderMenu As New ToolStripMenuItem("Custom &folder path")
 
         Me.CustomFolderTextBox = New ToolStripTextBox With {
-            .Text = My.Settings.CustomFolderPath,
+            .Text = Me.CUSTOM_FOLDER_NAME,
             .AutoSize = False,
             .Width = 250,
             .Height = 100
@@ -1361,12 +1535,63 @@ Public NotInheritable Class Form1 : Inherits Form
         optionsMenu.DropDownItems.Add(Me.MenuItemShowProgressBar)
         optionsMenu.DropDownItems.Add(Me.MenuItemCacheMenu)
         optionsMenu.DropDownItems.Add(New ToolStripSeparator())
+        optionsMenu.DropDownItems.Add(Me.MenuItemUpscaleSmallImages)
+        optionsMenu.DropDownItems.Add(New ToolStripSeparator())
+        optionsMenu.DropDownItems.Add(Me.MenuItemRememberWindowState)
+        optionsMenu.DropDownItems.Add(New ToolStripSeparator())
         optionsMenu.DropDownItems.Add(Me.MenuItemAskForDirectoryPathAtStartup)
         optionsMenu.DropDownItems.Add(New ToolStripSeparator())
         optionsMenu.DropDownItems.Add(Me.MenuItemDelKeyBehavior)
 
         customFolderMenu.DropDownItems.Add(Me.CustomFolderTextBox)
         optionsMenu.DropDownItems.Add(customFolderMenu)
+
+        Me.MenuItemAdvanced = New ToolStripMenuItem("Ad&vanced")
+        Me.MenuItemAdvancedWarning = New ToolStripLabel("If unsure, do not change anything!") With {
+            .ForeColor = Color.Red,
+            .Font = New Font("Segoe UI", 9.0F, FontStyle.Bold)
+        }
+
+        Me.NumFastForwardPauseCtrl = New NumericUpDown With {
+            .Minimum = 0,
+            .Maximum = 5000,
+            .Value = Me.PAUSE_BETWEEN_FASTFORWARD_MILLISECONDS,
+            .Width = 80
+        }
+        Me.NumFastForwardPauseHost = New ToolStripControlHost(Me.NumFastForwardPauseCtrl)
+        Dim menuFastForwardGroup As New ToolStripMenuItem("&Pause between fast forward (ms): ")
+        menuFastForwardGroup.DropDownItems.Add(Me.NumFastForwardPauseHost)
+
+        Me.MenuItemDisableFastLoadResize = New ToolStripMenuItem("Disable image resizing on load (&FastLoad)") With {
+            .CheckOnClick = True,
+            .Checked = Me.DISABLE_IMAGERESIZING_ON_LOAD_FASTLOAD
+        }
+
+        Me.MenuItemAdvanced.DropDownItems.Add(Me.MenuItemAdvancedWarning)
+        Me.MenuItemAdvanced.DropDownItems.Add(New ToolStripSeparator())
+        Me.MenuItemAdvanced.DropDownItems.Add(menuFastForwardGroup)
+        Me.MenuItemAdvanced.DropDownItems.Add(Me.MenuItemDisableFastLoadResize)
+
+        AddHandler Me.NumFastForwardPauseCtrl.ValueChanged, AddressOf Me.NumFastForwardPauseCtrl_ValueChanged
+
+        Me.MenuItemSlideshow = New ToolStripMenuItem("&Slideshow")
+        Me.MenuItemStartSlideshow = New ToolStripMenuItem("&Start Slideshow")
+
+        Me.NumSlideshowIntervalCtrl = New NumericUpDown With {
+            .Minimum = 1,
+            .Maximum = 9999,
+            .Value = Me.SLIDESHOW_INTERVAL_SECONDS,
+            .Width = 80
+        }
+        Me.NumSlideshowIntervalHost = New ToolStripControlHost(Me.NumSlideshowIntervalCtrl)
+        Dim menuSlideshowIntervalGroup As New ToolStripMenuItem("&Interval (seconds): ")
+        menuSlideshowIntervalGroup.DropDownItems.Add(Me.NumSlideshowIntervalHost)
+
+        Me.MenuItemSlideshow.DropDownItems.Add(Me.MenuItemStartSlideshow)
+        Me.MenuItemSlideshow.DropDownItems.Add(New ToolStripSeparator())
+        Me.MenuItemSlideshow.DropDownItems.Add(menuSlideshowIntervalGroup)
+
+        AddHandler Me.NumSlideshowIntervalCtrl.ValueChanged, AddressOf Me.NumSlideshowIntervalCtrl_ValueChanged
 
         Dim aboutMenu As New ToolStripMenuItem("&About")
         AddHandler aboutMenu.Click, Sub() Me.AboutBox.ShowDialog()
@@ -1379,7 +1604,9 @@ Public NotInheritable Class Form1 : Inherits Form
         Me.MainMenuStrip1 = New MenuStrip()
         Me.MainMenuStrip1.Items.Add(fileMenu)
         Me.MainMenuStrip1.Items.Add(imageMenu)
+        Me.MainMenuStrip1.Items.Add(Me.MenuItemSlideshow)
         Me.MainMenuStrip1.Items.Add(optionsMenu)
+        Me.MainMenuStrip1.Items.Add(Me.MenuItemAdvanced)
         Me.MainMenuStrip1.Items.Add(aboutMenu)
         Me.MainMenuStrip1.BackColor = Color.FromArgb(30, 30, 30)
         Me.MainMenuStrip1.ForeColor = SystemColors.ControlDark
@@ -1389,10 +1616,26 @@ Public NotInheritable Class Form1 : Inherits Form
 
         Me.PicBox = New SafePictureBox With {
             .Dock = DockStyle.Fill,
-            .SizeMode = PictureBoxSizeMode.Zoom,
+            .SizeMode = PictureBoxSizeMode.CenterImage,
             .BackColor = Color.Black
         }
         AddHandler Me.PicBox.Paint, AddressOf Me.PicBox_Paint
+
+        ' Inline event handler to update SizeMode dynamically when resizing the form
+        AddHandler Me.PicBox.Resize,
+            Sub(sender As Object, e As EventArgs)
+                If Me.PicBox.Image IsNot Nothing Then
+                    Dim bmp As Bitmap = DirectCast(Me.PicBox.Image, Bitmap)
+                    Me.PicBox.SizeMode =
+                    If(Not Me.UPSCALE_SMALL_IMAGES_TO_FIT_WINDOW AndAlso
+                           bmp.Width <= Me.PicBox.ClientSize.Width AndAlso
+                           bmp.Height <= Me.PicBox.ClientSize.Height AndAlso
+                           bmp.Width <= Me._screenWidth - 2 AndAlso
+                           bmp.Height <= Me._screenHeight - 2,
+                       PictureBoxSizeMode.CenterImage,
+                       PictureBoxSizeMode.Zoom)
+                End If
+            End Sub
 
         Me.PanScroll = New Panel With {
             .Dock = DockStyle.Fill,
@@ -1400,6 +1643,32 @@ Public NotInheritable Class Form1 : Inherits Form
             .BackColor = Color.Black,
             .Visible = False
         }
+
+        ' Dynamically center actual size image on window resize.
+        AddHandler Me.PanScroll.Resize,
+            Sub(sender As Object, e As EventArgs)
+                ' Check if PanScroll is visible, which naturally covers both Actual Size and Zoom modes
+                If Me.PanScroll.Visible AndAlso Me.PanScroll.Controls.Count > 0 Then
+                    Dim pb As PictureBox = DirectCast(Me.PanScroll.Controls(0), PictureBox)
+                    Dim pnlClientW As Integer = Me.PanScroll.ClientSize.Width
+                    Dim pnlClientH As Integer = Me.PanScroll.ClientSize.Height
+
+                    ' Suspend layout and reset scroll to calculate true (0,0) based coordinates
+                    Me.PanScroll.SuspendLayout()
+                    Dim savedScroll As Point = Me.PanScroll.AutoScrollPosition
+                    Me.PanScroll.AutoScrollPosition = Point.Empty
+
+                    ' If the image is smaller than the window, center it. If larger, lock to 0.
+                    Dim targetX As Integer = If(pb.Width < pnlClientW, (pnlClientW - pb.Width) \ 2, 0)
+                    Dim targetY As Integer = If(pb.Height < pnlClientH, (pnlClientH - pb.Height) \ 2, 0)
+
+                    pb.Location = New Point(targetX, targetY)
+
+                    ' Restore scroll (WinForms strictly requires positive values when setting AutoScrollPosition)
+                    Me.PanScroll.AutoScrollPosition = New Point(Math.Abs(savedScroll.X), Math.Abs(savedScroll.Y))
+                    Me.PanScroll.ResumeLayout(True)
+                End If
+            End Sub
 
         Dim pnlContent As New Panel With {
             .Dock = DockStyle.Fill,
@@ -1512,7 +1781,7 @@ Public NotInheritable Class Form1 : Inherits Form
                 End If
             Next
 #If DEBUG Then
-        Thread.CurrentThread.Join(0) ' Prevents ContextSwitchDeadlock on long-running loops
+            Thread.CurrentThread.Join(0) ' Prevents ContextSwitchDeadlock on long-running loops
 #End If
         Next
 
@@ -1537,7 +1806,8 @@ Public NotInheritable Class Form1 : Inherits Form
         Me.UpdateNavigationButtons()
     End Sub
 
-    Private Function LoadFast(filePath As String) As Bitmap
+    Private Function LoadFast(filePath As String, ByRef refOriginalWidth As Integer, ByRef refOriginalHeight As Integer) As Bitmap
+
         Dim src As Bitmap
         Try
             src = New Bitmap(filePath)
@@ -1547,10 +1817,16 @@ Public NotInheritable Class Form1 : Inherits Form
 
         Dim srcW As Integer = src.Width
         Dim srcH As Integer = src.Height
+        refOriginalWidth = srcW
+        refOriginalHeight = srcH
+
         Dim scale As Double = Math.Min(Me._screenWidth / srcW,
                                        Me._screenHeight / srcH)
 
-        If scale >= 1.0 Then
+        Dim shouldBypassResize As Boolean = Me.DISABLE_IMAGERESIZING_ON_LOAD_FASTLOAD
+        Dim shouldUpscale As Boolean = (scale >= 1.0 AndAlso Me.UPSCALE_SMALL_IMAGES_TO_FIT_WINDOW)
+
+        If shouldBypassResize OrElse (scale >= 1.0 AndAlso Not shouldUpscale) Then
             Dim native As New Bitmap(srcW, srcH, Imaging.PixelFormat.Format32bppPArgb)
             Using g As Graphics = Graphics.FromImage(native)
                 g.DrawImage(src, 0, 0, srcW, srcH)
@@ -1612,7 +1888,7 @@ Public NotInheritable Class Form1 : Inherits Form
                 End If
             Next
 #If DEBUG Then
-        Thread.CurrentThread.Join(0) ' Prevents ContextSwitchDeadlock on long-running loops
+            Thread.CurrentThread.Join(0) ' Prevents ContextSwitchDeadlock on long-running loops
 #End If
         Next
 
@@ -1800,10 +2076,11 @@ Public NotInheritable Class Form1 : Inherits Form
         Me.tblMain?.ResumeLayout(True)
 
         Me._isFullscreen = True
-        Me.Text = $"{My.Application.Info.Title} [FULLSCREEN] — {Path.GetFileName(Me._imageFiles(Me._currentIndex))}"
+        Me.Text = $"{My.Application.Info.ProductName} [FULLSCREEN] — {Path.GetFileName(Me._imageFiles(Me._currentIndex))}"
     End Sub
 
     Private Sub ExitFullscreen()
+        Me.StopSlideshow()
         Me.ResetZoom()
         Me.tblMain?.SuspendLayout()
 
@@ -1822,7 +2099,7 @@ Public NotInheritable Class Form1 : Inherits Form
         Me.tblMain?.ResumeLayout(True)
 
         Me._isFullscreen = False
-        Me.Text = $"{My.Application.Info.Title} — {Path.GetFileName(Me._imageFiles(Me._currentIndex))}"
+        Me.Text = $"{My.Application.Info.ProductName} — {Path.GetFileName(Me._imageFiles(Me._currentIndex))}"
     End Sub
 
     Private Sub ToggleActualSize()
@@ -1841,6 +2118,16 @@ Public NotInheritable Class Form1 : Inherits Form
         Cursor.Current = Cursors.Default
 
         If bmp Is Nothing Then Return
+
+        Select Case Me._rotationAngle
+            Case 90
+                bmp.RotateFlip(RotateFlipType.Rotate90FlipNone)
+            Case 180
+                bmp.RotateFlip(RotateFlipType.Rotate180FlipNone)
+            Case 270
+                bmp.RotateFlip(RotateFlipType.Rotate270FlipNone)
+        End Select
+
         Me._actualBitmap = bmp
 
         Dim pbActual As New PictureBox With {
@@ -1866,13 +2153,21 @@ Public NotInheritable Class Form1 : Inherits Form
         Me.PanScroll.Visible = True
         Me.PanScroll.Update()
 
-        Dim scrollX As Integer = Math.Max(0, (bmp.Width - Me.PanScroll.ClientSize.Width) \ 2)
-        Dim scrollY As Integer = Math.Max(0, (bmp.Height - Me.PanScroll.ClientSize.Height) \ 2)
+        Dim pnlClientW As Integer = Me.PanScroll.ClientSize.Width
+        Dim pnlClientH As Integer = Me.PanScroll.ClientSize.Height
+
+        Dim targetX As Integer = If(bmp.Width < pnlClientW, (pnlClientW - bmp.Width) \ 2, 0)
+        Dim targetY As Integer = If(bmp.Height < pnlClientH, (pnlClientH - bmp.Height) \ 2, 0)
+
+        pbActual.Location = New Point(targetX, targetY)
+
+        Dim scrollX As Integer = Math.Max(0, (bmp.Width - pnlClientW) \ 2)
+        Dim scrollY As Integer = Math.Max(0, (bmp.Height - pnlClientH) \ 2)
         Me.PanScroll.AutoScrollPosition = New Point(scrollX, scrollY)
 
         Me.PanScroll.Focus()
         Me._isActualSize = True
-        Me.Text = $"{My.Application.Info.Title} [1:1] — {Path.GetFileName(filePath)}"
+        Me.Text = $"{My.Application.Info.ProductName} [1:1] — {Path.GetFileName(filePath)}"
     End Sub
 
     Private Sub ExitActualSize()
@@ -1890,7 +2185,7 @@ Public NotInheritable Class Form1 : Inherits Form
         Me._dragActive = False
 
         If Me._imageFiles.Length > 0 Then
-            Me.Text = $"{My.Application.Info.Title} — {Path.GetFileName(Me._imageFiles(Me._currentIndex))}"
+            Me.Text = $"{My.Application.Info.ProductName} — {Path.GetFileName(Me._imageFiles(Me._currentIndex))}"
         End If
 
         Me.ResetZoom()
@@ -1902,30 +2197,62 @@ Public NotInheritable Class Form1 : Inherits Form
         Me.PanScroll.AutoScrollPosition = New Point(cur.X + dx, cur.Y + dy)
     End Sub
 
+    ''' <summary>
+    ''' Enables the internal double-buffering flag on a control via reflection.
+    ''' Panel (and ScrollableControl in general) does not expose DoubleBuffered
+    ''' publicly, so the protected member inherited from Control must be
+    ''' accessed this way.
+    ''' </summary>
+    Private Sub EnableDoubleBuffering(ByVal targetControl As Control)
+
+        Dim doubleBufferedProperty As Reflection.PropertyInfo =
+            GetType(Control).GetProperty("DoubleBuffered", Reflection.BindingFlags.NonPublic Or Reflection.BindingFlags.Instance)
+
+        doubleBufferedProperty?.SetValue(targetControl, True, Nothing)
+    End Sub
+
     Private Sub AdjustZoom(delta As Double)
-        If Me._imageFiles Is Nothing OrElse Me._imageFiles.Length = 0 Then Return
-        If Me.PicBox.Image Is Nothing AndAlso Me._actualBitmap Is Nothing Then Return
+
+        If Me._imageFiles Is Nothing OrElse Me._imageFiles.Length = 0 Then
+            Return
+        End If
+
+        If Me.PicBox.Image Is Nothing AndAlso Me._actualBitmap Is Nothing Then
+            Return
+        End If
 
         If Me._isFullscreen Then
             Me.ExitFullscreen()
         End If
 
         Dim baseBmp As Bitmap = If(Me._isActualSize, Me._actualBitmap, DirectCast(Me.PicBox.Image, Bitmap))
-        If baseBmp Is Nothing Then Return
+
+        If baseBmp Is Nothing Then
+            Return
+        End If
 
         Dim baseWidth As Integer = baseBmp.Width
         Dim baseHeight As Integer = baseBmp.Height
 
         If Not Me._isZoomedMode Then
+
             If Me._isActualSize Then
                 Me._baseZoomFactor = 1.0
             Else
                 Dim pnlWidth As Double = Convert.ToDouble(Me.PicBox.ClientSize.Width)
                 Dim pnlHeight As Double = Convert.ToDouble(Me.PicBox.ClientSize.Height)
+
                 Dim scaleX As Double = pnlWidth / Convert.ToDouble(baseWidth)
                 Dim scaleY As Double = pnlHeight / Convert.ToDouble(baseHeight)
+
+                ' Do not enlarge small images when initializing zoom mode.
                 Me._baseZoomFactor = Math.Min(scaleX, scaleY)
+
+                If Me._baseZoomFactor > 1.0 Then
+                    Me._baseZoomFactor = 1.0
+                End If
             End If
+
             Me._currentZoomFactor = Me._baseZoomFactor
             Me._isZoomedMode = True
         End If
@@ -1934,6 +2261,11 @@ Public NotInheritable Class Form1 : Inherits Form
 
         If newZoom < 0.1 Then newZoom = 0.1
         If newZoom > 15.0 Then newZoom = 15.0
+
+        ' Absolute cap to prevent GDI+ memory crash and black screen on large images.
+        Dim maxDimension As Double = 30000.0
+        If Convert.ToDouble(baseWidth) * newZoom > maxDimension Then newZoom = maxDimension / Convert.ToDouble(baseWidth)
+        If Convert.ToDouble(baseHeight) * newZoom > maxDimension Then newZoom = maxDimension / Convert.ToDouble(baseHeight)
 
         ' Exit zoom mode cleanly if we return to the exact starting zoom factor
         If Math.Abs(newZoom - Me._baseZoomFactor) < 0.05 Then
@@ -1947,24 +2279,56 @@ Public NotInheritable Class Form1 : Inherits Form
         Dim newHeight As Integer = Convert.ToInt32(Math.Round(Convert.ToDouble(baseHeight) * Me._currentZoomFactor))
 
         Dim pbScroll As PictureBox = Nothing
+
+        ' Prevents ghosting of the previous image in the scrollable area when zooming in or out.
+        NativeMethods.SendMessage(Me.Handle, &HB, 0, 0)
+
         If Me.PanScroll.Controls.Count > 0 Then
             pbScroll = DirectCast(Me.PanScroll.Controls(0), PictureBox)
+
         Else
             pbScroll = New PictureBox With {
-                .SizeMode = PictureBoxSizeMode.StretchImage,
-                .BackColor = Color.Black,
-                .Cursor = Cursors.SizeAll,
-                .TabStop = False
-            }
+            .SizeMode = PictureBoxSizeMode.StretchImage,
+            .BackColor = Color.Black,
+            .Cursor = Cursors.SizeAll,
+            .TabStop = False
+        }
+
             AddHandler pbScroll.MouseDown, AddressOf Me.ActualPicBox_MouseDown
             AddHandler pbScroll.MouseMove, AddressOf Me.ActualPicBox_MouseMove
             AddHandler pbScroll.MouseUp, AddressOf Me.ActualPicBox_MouseUp
             AddHandler pbScroll.MouseDoubleClick, AddressOf Me.ActualPicBox_MouseDoubleClick
+
             Me.PanScroll.Controls.Add(pbScroll)
         End If
 
-        ' We must ensure the panel is visible before calculating ClientSize for centering
+        Dim pnlClientW As Integer = Me.PanScroll.ClientSize.Width
+        Dim pnlClientH As Integer = Me.PanScroll.ClientSize.Height
+        Dim viewCenterX As Double = pnlClientW / 2.0
+        Dim viewCenterY As Double = pnlClientH / 2.0
+
+        Dim oldW As Double = Convert.ToDouble(pbScroll.Width)
+        Dim oldH As Double = Convert.ToDouble(pbScroll.Height)
+
+        Dim imgX As Double = viewCenterX - pbScroll.Left
+        Dim imgY As Double = viewCenterY - pbScroll.Top
+
+        Dim ratioX As Double = If(oldW > 0, imgX / oldW, 0.5)
+        Dim ratioY As Double = If(oldH > 0, imgY / oldH, 0.5)
+
+        Dim staleRegion As Rectangle = Rectangle.Empty
+        Dim needsStaleWipe As Boolean = False
+
+        ' ═══════════════════════════════════════════════════════════════
+        ' PHASE 1: batch Visible/Image/Size/AutoScrollMinSize, then force the
+        ' pending layout with ResumeLayout(True) so the panel's scrollable
+        ' extents (scrollbar visibility, ClientSize, DisplayRectangle) are
+        ' genuinely recalculated before Phase 2 does any centering math with them.
+        ' ═══════════════════════════════════════════════════════════════
+
         If Me.PicBox.Visible Then
+            staleRegion = Me.PicBox.Bounds
+            needsStaleWipe = True
             Me.PicBox.Visible = False
             Me.PanScroll.Visible = True
         End If
@@ -1973,33 +2337,56 @@ Public NotInheritable Class Form1 : Inherits Form
         pbScroll.Size = New Size(newWidth, newHeight)
         Me.PanScroll.AutoScrollMinSize = pbScroll.Size
 
+        If needsStaleWipe AndAlso Me.PicBox.Parent IsNot Nothing Then
+            Me.PicBox.Parent.Invalidate(staleRegion, True)
+        End If
+
+        pnlClientW = Me.PanScroll.ClientSize.Width
+        pnlClientH = Me.PanScroll.ClientSize.Height
+        viewCenterX = pnlClientW / 2.0
+        viewCenterY = pnlClientH / 2.0
+
         ' ═══════════════════════════════════════════════════════════════
-        ' DYNAMIC CENTERING ALGORITHM
+        ' PHASE 2: re-suspend specifically to wrap Location and
+        ' AutoScrollPosition. Your first working version proved empirically
+        ' that keeping THESE two mutations inside a suspended block is what
+        ' actually kills the corner ghosting; taking them out (as the previous
+        ' reply did, to read fresh ClientSize) let it reappear. Phase 1 already
+        ' guarantees the numbers used here are correct, so this block only
+        ' needs to guarantee the repaint stays batched.
         ' ═══════════════════════════════════════════════════════════════
-        Dim pnlClientW As Integer = Me.PanScroll.ClientSize.Width
-        Dim pnlClientH As Integer = Me.PanScroll.ClientSize.Height
 
         Dim targetX As Integer = pbScroll.Location.X
         Dim targetY As Integer = pbScroll.Location.Y
 
-        ' Center horizontally if smaller than viewport, else reset to 0 to let AutoScroll handle it
         If newWidth < pnlClientW Then
             targetX = (pnlClientW - newWidth) \ 2
         ElseIf pbScroll.Location.X > 0 Then
             targetX = 0
         End If
 
-        ' Center vertically if smaller than viewport, else reset to 0 to let AutoScroll handle it
         If newHeight < pnlClientH Then
             targetY = (pnlClientH - newHeight) \ 2
         ElseIf pbScroll.Location.Y > 0 Then
             targetY = 0
         End If
 
-        ' Only apply layout changes if the coordinates actually shifted, to prevent visual jitter
         If pbScroll.Location.X <> targetX OrElse pbScroll.Location.Y <> targetY Then
             pbScroll.Location = New Point(targetX, targetY)
         End If
+
+        If newWidth >= pnlClientW OrElse newHeight >= pnlClientH Then
+
+            Dim newScrollX As Integer = CInt(Math.Round((ratioX * newWidth) - viewCenterX))
+            Dim newScrollY As Integer = CInt(Math.Round((ratioY * newHeight) - viewCenterY))
+
+            Me.PanScroll.AutoScrollPosition = New Point(Math.Max(0, newScrollX), Math.Max(0, newScrollY))
+
+        End If
+
+        ' Prevents ghosting of the previous image in the scrollable area when zooming in or out.
+        NativeMethods.SendMessage(Me.Handle, &HB, 1, 0)
+        Me.Invalidate(invalidateChildren:=True)
     End Sub
 
     Private Sub ResetZoom()
@@ -2011,13 +2398,18 @@ Public NotInheritable Class Form1 : Inherits Form
         ' we must destroy the dynamic zoom box and restore the standard PicBox.
         If Not Me._isActualSize AndAlso Me.PanScroll.Visible Then
             Me.PanScroll.AutoScrollMinSize = Size.Empty
-            Me.PanScroll.Controls.Clear()
+            'Me.PanScroll.Controls.Clear()
             Me.PanScroll.Visible = False
             Me.PicBox.Visible = True
         End If
     End Sub
 
     Private Sub NavigateNext()
+        If Me.PAUSE_BETWEEN_FASTFORWARD_MILLISECONDS > 0 AndAlso (Date.Now - Me._lastNavTime).TotalMilliseconds < Me.PAUSE_BETWEEN_FASTFORWARD_MILLISECONDS Then
+            Return
+        End If
+        Me._lastNavTime = Date.Now
+
         If Not iscurrentimagedisplayed Then
             Return
         End If
@@ -2038,6 +2430,11 @@ Public NotInheritable Class Form1 : Inherits Form
     End Sub
 
     Private Sub NavigatePrev()
+        If Me.PAUSE_BETWEEN_FASTFORWARD_MILLISECONDS > 0 AndAlso (Date.Now - Me._lastNavTime).TotalMilliseconds < Me.PAUSE_BETWEEN_FASTFORWARD_MILLISECONDS Then
+            Return
+        End If
+        Me._lastNavTime = Date.Now
+
         If Not iscurrentimagedisplayed Then
             Return
         End If
@@ -2109,31 +2506,124 @@ Public NotInheritable Class Form1 : Inherits Form
 
         Me._rotationAngle = ((Me._rotationAngle Mod 360) + 360) Mod 360
 
-
         Dim oldDisplayed As Image = Me.PicBox.Image
-
         Dim displayBmp As Bitmap = DirectCast(cached.Bitmap.Clone(), Bitmap)
 
         Select Case Me._rotationAngle
-
             Case 90
                 displayBmp.RotateFlip(RotateFlipType.Rotate90FlipNone)
-
             Case 180
                 displayBmp.RotateFlip(RotateFlipType.Rotate180FlipNone)
-
             Case 270
                 displayBmp.RotateFlip(RotateFlipType.Rotate270FlipNone)
-
         End Select
 
-        If Me._isActualSize Then
-            Me.ExitActualSize()
+        ' ═══════════════════════════════════════════════════════════════
+        ' IN-PLACE ROTATION TO PREVENT SCROLL RESET AND GLITCHES
+        ' ═══════════════════════════════════════════════════════════════
+        If (Me._isActualSize OrElse Me._isZoomedMode) AndAlso Me.PanScroll.Controls.Count > 0 Then
+            Dim pb As PictureBox = DirectCast(Me.PanScroll.Controls(0), PictureBox)
+
+            Dim pnlW As Integer = Me.PanScroll.ClientSize.Width
+            Dim pnlH As Integer = Me.PanScroll.ClientSize.Height
+
+            ' 1. Capture exact proportions before rotation
+            Dim currentScrollX As Integer = Math.Abs(Me.PanScroll.AutoScrollPosition.X)
+            Dim currentScrollY As Integer = Math.Abs(Me.PanScroll.AutoScrollPosition.Y)
+            Dim imgCenterX As Double = currentScrollX + (pnlW / 2.0)
+            Dim imgCenterY As Double = currentScrollY + (pnlH / 2.0)
+
+            Dim propX As Double = If(pb.Width > 0, imgCenterX / Convert.ToDouble(pb.Width), 0.5)
+            Dim propY As Double = If(pb.Height > 0, imgCenterY / Convert.ToDouble(pb.Height), 0.5)
+
+            ' Swap proportions since Width and Height are inverted during 90-degree rotations
+            Dim newPropX As Double = propY
+            Dim newPropY As Double = propX
+
+            Dim oldPbImage As Image = pb.Image
+
+            If Me._actualBitmap IsNot Nothing Then Me._actualBitmap.Dispose()
+            Me._actualBitmap = New Bitmap(displayBmp)
+
+            ' 2. Calculate the new dimensions based on current zoom factor
+            Dim newWidth As Integer
+            Dim newHeight As Integer
+
+            If Me._isZoomedMode Then
+                Dim pnlClientW As Double = Convert.ToDouble(Me.PicBox.ClientSize.Width)
+                Dim pnlClientH As Double = Convert.ToDouble(Me.PicBox.ClientSize.Height)
+                Dim scaleX As Double = pnlClientW / Convert.ToDouble(displayBmp.Width)
+                Dim scaleY As Double = pnlClientH / Convert.ToDouble(displayBmp.Height)
+                Me._baseZoomFactor = Math.Min(scaleX, scaleY)
+                newWidth = Convert.ToInt32(Math.Round(Convert.ToDouble(displayBmp.Width) * Me._currentZoomFactor))
+                newHeight = Convert.ToInt32(Math.Round(Convert.ToDouble(displayBmp.Height) * Me._currentZoomFactor))
+            Else
+                newWidth = displayBmp.Width
+                newHeight = displayBmp.Height
+            End If
+
+            ' 3. Apply new size to expand the AutoScroll boundaries BEFORE touching Location
+            pb.Size = New Size(newWidth, newHeight)
+            Me.PanScroll.AutoScrollMinSize = pb.Size
+
+            ' 4. Apply your exact original Location logic
+            Dim targetX As Integer = pb.Location.X
+            Dim targetY As Integer = pb.Location.Y
+
+            If newWidth < pnlW Then
+                targetX = (pnlW - newWidth) \ 2
+            ElseIf pb.Location.X > 0 Then
+                targetX = 0
+            End If
+
+            If newHeight < pnlH Then
+                targetY = (pnlH - newHeight) \ 2
+            ElseIf pb.Location.Y > 0 Then
+                targetY = 0
+            End If
+
+            If pb.Location.X <> targetX OrElse pb.Location.Y <> targetY Then
+                pb.Location = New Point(targetX, targetY)
+            End If
+
+            ' 5. Apply new image
+            pb.Image = displayBmp
+
+            ' 6. Re-apply the inverted scroll accurately
+            If newWidth >= pnlW OrElse newHeight >= pnlH Then
+                Dim newImgCenterX As Double = newPropX * newWidth
+                Dim newImgCenterY As Double = newPropY * newHeight
+
+                Dim newScrollX As Integer = CInt(Math.Round(newImgCenterX - (pnlW / 2.0)))
+                Dim newScrollY As Integer = CInt(Math.Round(newImgCenterY - (pnlH / 2.0)))
+                Me.PanScroll.AutoScrollPosition = New Point(Math.Max(0, newScrollX), Math.Max(0, newScrollY))
+            End If
+
+            ' Clean memory avoiding the Parameter Not Valid crash
+            Dim oldPicBoxImage As Image = Me.PicBox.Image
+            Me.PicBox.Image = displayBmp
+
+            If oldPbImage IsNot Nothing AndAlso Not Object.ReferenceEquals(oldPbImage, sourceBmp) Then oldPbImage.Dispose()
+            If oldPicBoxImage IsNot Nothing AndAlso Not Object.ReferenceEquals(oldPicBoxImage, sourceBmp) Then oldPicBoxImage.Dispose()
+            Return
         End If
+
+        ' ═══════════════════════════════════════════════════════════════
+        ' STANDARD FIT MODE ROTATION (No active scrollbars)
+        ' ═══════════════════════════════════════════════════════════════
 
         If Me._isZoomedMode Then
             Me.ResetZoom()
         End If
+
+        Me.PicBox.SizeMode =
+            If(Not Me.UPSCALE_SMALL_IMAGES_TO_FIT_WINDOW AndAlso
+                   displayBmp.Width <= Me.PicBox.ClientSize.Width AndAlso
+                   displayBmp.Height <= Me.PicBox.ClientSize.Height AndAlso
+                   displayBmp.Width <= Me._screenWidth - 2 AndAlso
+                   displayBmp.Height <= Me._screenHeight - 2,
+               PictureBoxSizeMode.CenterImage,
+               PictureBoxSizeMode.Zoom)
 
         Me.PicBox.Image = displayBmp
 
@@ -2484,14 +2974,17 @@ Public NotInheritable Class Form1 : Inherits Form
                     If Not Me._cache.ContainsKey(filePath) Then
                         Try
                             If File.Exists(filePath) Then
-                                Dim bmp As Bitmap = Me.LoadFast(filePath)
+
+                                Dim originalWidth As Integer
+                                Dim originalHeight As Integer
+                                Dim bmp As Bitmap = Me.LoadFast(filePath, originalWidth, originalHeight)
                                 If bmp IsNot Nothing Then
                                     Dim fileInfo As New FileInfo(filePath)
                                     Dim formattedSize As String = Me.FormatFileSize(fileInfo.Length)
                                     Dim createdText As String = fileInfo.CreationTime.ToString("MM/dd/yyyy HH:mm:ss")
                                     Dim modifiedText As String = fileInfo.LastWriteTime.ToString("MM/dd/yyyy HH:mm:ss")
-                                    Dim imageWidth As Integer = bmp.Width
-                                    Dim imageHeight As Integer = bmp.Height
+                                    Dim imageWidth As Integer = originalWidth
+                                    Dim imageHeight As Integer = originalHeight
                                     Dim bpp As Integer = Image.GetPixelFormatSize(bmp.PixelFormat)
 
                                     Dim cachedImg As New CachedImage(bmp, imageWidth, imageHeight, bpp, formattedSize, createdText, modifiedText)
@@ -2580,6 +3073,15 @@ Public NotInheritable Class Form1 : Inherits Form
         Dim cachedImg As New CachedImage()
         If Me._cache.TryGetValue(filePath, cachedImg) Then
             Try
+                Me.PicBox.SizeMode =
+                    If(Not Me.UPSCALE_SMALL_IMAGES_TO_FIT_WINDOW AndAlso
+                           cachedImg.Bitmap.Width <= Me.PicBox.ClientSize.Width AndAlso
+                           cachedImg.Bitmap.Height <= Me.PicBox.ClientSize.Height AndAlso
+                           cachedImg.Bitmap.Width <= Me._screenWidth - 2 AndAlso
+                           cachedImg.Bitmap.Height <= Me._screenHeight - 2,
+                    PictureBoxSizeMode.CenterImage,
+                    PictureBoxSizeMode.Zoom)
+
                 Me.PicBox.Image = cachedImg.Bitmap
                 If Not File.Exists(filePath) Then
                     Me._isImageMissing = True
@@ -2595,10 +3097,10 @@ Public NotInheritable Class Form1 : Inherits Form
             Catch
                 Return
             End Try
-            Me.Text = If(Me._isFullscreen, $"{My.Application.Info.Title} [FULLSCREEN] — {fileName}", $"{My.Application.Info.Title} — {fileName}")
+            Me.Text = If(Me._isFullscreen, $"{My.Application.Info.ProductName} [FULLSCREEN] — {fileName}", $"{My.Application.Info.ProductName} — {fileName}")
         Else
             Me.lblInfo.Text = $"{filecountstr}  |  Loading metadata…{Environment.NewLine}{fileName}"
-            Me.Text = If(Me._isFullscreen, $"{My.Application.Info.Title} [FULLSCREEN] — {fileName} (loading…)", $"{My.Application.Info.Title} — {fileName} (loading…)")
+            Me.Text = If(Me._isFullscreen, $"{My.Application.Info.ProductName} [FULLSCREEN] — {fileName} (loading…)", $"{My.Application.Info.ProductName} — {fileName} (loading…)")
 
             Dim filePathCopy As String = filePath
             Dim genCopy As Integer = gen
@@ -2607,9 +3109,12 @@ Public NotInheritable Class Form1 : Inherits Form
             ThreadPool.QueueUserWorkItem(
                 Sub(state As Object)
                     If genCopy <> Me._displayGeneration Then Return
+
+                    Dim originalWidth As Integer
+                    Dim originalHeight As Integer
                     Dim loaded As Bitmap = Nothing
                     Try
-                        loaded = Me.LoadFast(filePathCopy)
+                        loaded = Me.LoadFast(filePathCopy, originalWidth, originalHeight)
                     Catch
                     End Try
                     If loaded Is Nothing Then Return
@@ -2623,8 +3128,8 @@ Public NotInheritable Class Form1 : Inherits Form
                     Dim formattedSize As String = Me.FormatFileSize(fileInfo.Length)
                     Dim createdText As String = fileInfo.CreationTime.ToString("MM/dd/yyyy HH:mm:ss")
                     Dim modifiedText As String = fileInfo.LastWriteTime.ToString("MM/dd/yyyy HH:mm:ss")
-                    Dim imageWidth As Integer = loaded.Width
-                    Dim imageHeight As Integer = loaded.Height
+                    Dim imageWidth As Integer = originalWidth
+                    Dim imageHeight As Integer = originalHeight
                     Dim bpp As Integer = Image.GetPixelFormatSize(loaded.PixelFormat)
 
                     Dim newCachedImg As New CachedImage(loaded, imageWidth, imageHeight, bpp, formattedSize, createdText, modifiedText)
@@ -2642,6 +3147,16 @@ Public NotInheritable Class Form1 : Inherits Form
                                 Try
                                     If newCachedImg.Bitmap IsNot Nothing Then
                                         Me.DrainPendingDisposal()
+
+                                        Me.PicBox.SizeMode =
+                                        If(Not Me.UPSCALE_SMALL_IMAGES_TO_FIT_WINDOW AndAlso
+                                               newCachedImg.Bitmap.Width <= Me.PicBox.ClientSize.Width AndAlso
+                                               newCachedImg.Bitmap.Height <= Me.PicBox.ClientSize.Height AndAlso
+                                               newCachedImg.Bitmap.Width <= Me._screenWidth - 2 AndAlso
+                                               newCachedImg.Bitmap.Height <= Me._screenHeight - 2,
+                                            PictureBoxSizeMode.CenterImage,
+                                            PictureBoxSizeMode.Zoom)
+
                                         Me.PicBox.Image = newCachedImg.Bitmap
 
                                         If Not File.Exists(filePathCopy) Then
@@ -2659,7 +3174,7 @@ Public NotInheritable Class Form1 : Inherits Form
                                 Catch
                                     Return
                                 End Try
-                                Me.Text = If(Me._isFullscreen, $"{My.Application.Info.Title} [FULLSCREEN] — {Path.GetFileName(filePathCopy)}", $"{My.Application.Info.Title} — {Path.GetFileName(filePathCopy)}")
+                                Me.Text = If(Me._isFullscreen, $"{My.Application.Info.ProductName} [FULLSCREEN] — {Path.GetFileName(filePathCopy)}", $"{My.Application.Info.ProductName} — {Path.GetFileName(filePathCopy)}")
                             End Sub)
                     End If
                 End Sub)
@@ -2764,6 +3279,23 @@ Public NotInheritable Class Form1 : Inherits Form
 
         Return If(lo >= files.Length, files.Length - 1, lo)
     End Function
+
+    Private Sub StartSlideshow()
+
+        Me._isSlideshowActive = True
+        Me.MenuItemStartSlideshow.Text = "S&top Slideshow"
+        Me.SlideshowTimer.Interval = Me.SLIDESHOW_INTERVAL_SECONDS * 1000
+        Me.SlideshowTimer.Start()
+        If Not Me._isFullscreen Then
+            Me.EnterFullscreen()
+        End If
+    End Sub
+
+    Private Sub StopSlideshow()
+        Me._isSlideshowActive = False
+        Me.MenuItemStartSlideshow.Text = "&Start Slideshow"
+        Me.SlideshowTimer.Stop()
+    End Sub
 
 #End Region
 
