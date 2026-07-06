@@ -25,7 +25,8 @@ install:
   - >-
     git submodule update --init --recursive
 before_build:
-  - >-
+  - >-- 
+    nuget restore "Source\%APP_DIR_NAME%.%SOLUTION_EXT%"
     dotnet nuget locals all --clear
 build:
   project: Source\%APP_DIR_NAME%.%SOLUTION_EXT%
