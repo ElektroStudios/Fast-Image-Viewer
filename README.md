@@ -182,6 +182,8 @@ This work is distributed for educational purposes and without any profit motive.
   <b>Your support means the world to me! Thank you for considering it! 🤗💗</b>
 </div>
 
+------------------
+
 ## ⚠️ Disclaimer
 
 This software and its associated repository are provided strictly on an "as is" basis, without warranties of any kind, whether express or implied. This includes, but is not limited to, any implied warranties of merchantability, reliability, or fitness for a particular purpose.
