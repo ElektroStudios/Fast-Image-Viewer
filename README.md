@@ -67,6 +67,12 @@ windowsapplication
     <a href="https://en.wikipedia.org/wiki/Spanish_Empire"><img src="https://img.shields.io/badge/Made_in-Spain_%F0%9F%87%AA%F0%9F%87%B8-AA151B?style=flat" alt="Made in Spain"></a>
 </p>
 
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FElektroStudios%2FFast-Image-Viewer.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FElektroStudios%2FFast-Image-Viewer?ref=badge_shield)
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FElektroStudios%2FFast-Image-Viewer.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FElektroStudios%2FFast-Image-Viewer?ref=badge_large)
+
 ------------------
 
 ## 👋 Introduction
