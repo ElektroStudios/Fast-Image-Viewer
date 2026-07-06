@@ -54,5 +54,5 @@ jobs:
         run: |
           ${{ runner.temp }}\scanner\dotnet-sonarscanner begin /k:"${{ env.SONAR_PROJECT_KEY }}" /o:"${{ env.SONAR_ORGANIZATION }}" /d:sonar.token="$env:SONAR_TOKEN"
           nuget restore "Source\${{ env.SOLUTION_NAME }}.${{ env.SOLUTION_EXT }}"
-          dotnet build "Source\${{ env.SOLUTION_NAME }}.${{ env.SOLUTION_EXT }}"
+          dotnet build "Source\${{ env.SOLUTION_NAME }}.${{ env.SOLUTION_EXT }}" -p:GenerateResourceUsePreserializedResources=true
           ${{ runner.temp }}\scanner\dotnet-sonarscanner end /d:sonar.token="$env:SONAR_TOKEN"
