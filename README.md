@@ -58,6 +58,7 @@ Initially started as a private, basic prompt-engineered tool for my personal wor
 ## 🖼️ Screenshots
 
 ![FIV screenshot 1](/Images/screenshot1.png)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FElektroStudios%2FFast-Image-Viewer.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FElektroStudios%2FFast-Image-Viewer?ref=badge_shield)
 
 ## 🎦 Videos
 
@@ -168,3 +169,7 @@ This work is distributed for educational purposes and without any profit motive.
 <br></br>
 
 <h2 align="center"><u>Your support means the world to me! Thank you for considering it!</u> 👍</h2>
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FElektroStudios%2FFast-Image-Viewer.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FElektroStudios%2FFast-Image-Viewer?ref=badge_large)
