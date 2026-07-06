@@ -41,27 +41,27 @@ windowsapplication
 ------------------
 
 <p align="center">
-    <a href="https://github.com/ElektroStudios/PROJECT_NAME/network/members"><img src="https://img.shields.io/github/forks/ElektroStudios/PROJECT_NAME.svg?style=social&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg%3D%3D&label=%F0%9F%8D%B4%20Forks" alt="Forks"></a>&nbsp;
-    <a href="https://github.com/ElektroStudios/PROJECT_NAME/graphs/contributors"><img src="https://img.shields.io/github/contributors/ElektroStudios/PROJECT_NAME.svg?style=social&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg%3D%3D&label=%F0%9F%91%A5%20Contributors" alt="Contributors"></a>&nbsp;
+    <a href="https://github.com/ElektroStudios/Fast-Image-Viewer/network/members"><img src="https://img.shields.io/github/forks/ElektroStudios/Fast-Image-Viewer.svg?style=social&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg%3D%3D&label=%F0%9F%8D%B4%20Forks" alt="Forks"></a>&nbsp;
+    <a href="https://github.com/ElektroStudios/Fast-Image-Viewer/graphs/contributors"><img src="https://img.shields.io/github/contributors/ElektroStudios/Fast-Image-Viewer.svg?style=social&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg%3D%3D&label=%F0%9F%91%A5%20Contributors" alt="Contributors"></a>&nbsp;
     <a href="https://github.com/ElektroStudios"><img src="https://img.shields.io/github/followers/ElektroStudios.svg?style=social&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg%3D%3D&label=%F0%9F%91%A4%20Followers" alt="Followers"></a>&nbsp;
-    <a href="https://github.com/ElektroStudios/PROJECT_NAME/watchers"><img src="https://img.shields.io/github/watchers/ElektroStudios/PROJECT_NAME.svg?style=social&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg%3D%3D&label=%F0%9F%91%80%20Watchers" alt="Watchers"></a>
+    <a href="https://github.com/ElektroStudios/Fast-Image-Viewer/watchers"><img src="https://img.shields.io/github/watchers/ElektroStudios/Fast-Image-Viewer.svg?style=social&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg%3D%3D&label=%F0%9F%91%80%20Watchers" alt="Watchers"></a>
     <a href="https://github.com/sponsors/ElektroStudios"><img src="https://img.shields.io/github/sponsors/ElektroStudios.svg?style=social&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg%3D%3D&label=%F0%9F%92%96%20Sponsors" alt="Sponsors"></a>&nbsp;
-    <a href="https://github.com/ElektroStudios/PROJECT_NAME/stargazers"><img src="https://img.shields.io/github/stars/ElektroStudios/PROJECT_NAME.svg?style=social&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg%3D%3D&label=%E2%AD%90%20Stars" alt="Stars"></a>
+    <a href="https://github.com/ElektroStudios/Fast-Image-Viewer/stargazers"><img src="https://img.shields.io/github/stars/ElektroStudios/Fast-Image-Viewer.svg?style=social&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg%3D%3D&label=%E2%AD%90%20Stars" alt="Stars"></a>
   <br>
   <br>
-    <a href="https://ci.appveyor.com/project/ElektroStudios/PROJECT_NAME"><img src="https://ci.appveyor.com/api/projects/status/github/ElektroStudios/PROJECT_NAME?svg=true" alt="AppVeyor CI"></a>
-    <a href="https://sonarcloud.io/summary/new_code?id=ElektroStudios_PROJECT_NAME"><img src="https://sonarcloud.io/api/project_badges/measure?project=ElektroStudios_PROJECT_NAME&metric=alert_status" alt="SonarCloud Quality Gate"></a>
-    <a href="https://github.com/ElektroStudios/PROJECT_NAME/releases/latest"><img src="https://img.shields.io/github/v/release/ElektroStudios/PROJECT_NAME" alt="Latest Release"></a>
+    <a href="https://ci.appveyor.com/project/ElektroStudios/Fast-Image-Viewer"><img src="https://ci.appveyor.com/api/projects/status/github/ElektroStudios/Fast-Image-Viewer?svg=true" alt="AppVeyor CI"></a>
+    <a href="https://sonarcloud.io/summary/new_code?id=ElektroStudios_Fast-Image-Viewer"><img src="https://sonarcloud.io/api/project_badges/measure?project=ElektroStudios_Fast-Image-Viewer&metric=alert_status" alt="SonarCloud Quality Gate"></a>
+    <a href="https://github.com/ElektroStudios/Fast-Image-Viewer/releases/latest"><img src="https://img.shields.io/github/v/release/ElektroStudios/Fast-Image-Viewer" alt="Latest Release"></a>
     <a href="https://learn.microsoft.com/en-us/dotnet/visual-basic/"><img src="https://img.shields.io/badge/language-VB.NET-purple.svg?logo=visualbasic" alt="Language"></a>
     <a href="https://learn.microsoft.com/en-us/windows/apps/"><img src="https://img.shields.io/badge/platform-Windows-lightgray.svg" alt="Platform"></a>
-    <a href="License.md"><img src="https://img.shields.io/github/license/ElektroStudios/PROJECT_NAME" alt="License"></a>
+    <a href="License.md"><img src="https://img.shields.io/github/license/ElektroStudios/Fast-Image-Viewer" alt="License"></a>
   <br>
-    <a href="https://github.com/ElektroStudios/PROJECT_NAME/archive/refs/heads/main.zip"><img src="https://img.shields.io/github/repo-size/ElektroStudios/PROJECT_NAME" alt="Repo size"></a>
-    <a href="https://somsubhra.github.io/github-release-stats/?username=ElektroStudios&repository=PROJECT_NAME"><img src="https://img.shields.io/github/downloads/ElektroStudios/PROJECT_NAME/total.svg?label=total%20downloads" alt="Total Downloads"></a>
-    <a href="https://github.com/ElektroStudios/PROJECT_NAME/commits/main"><img src="https://img.shields.io/github/last-commit/ElektroStudios/PROJECT_NAME" alt="Last commit"></a>
-    <a href="https://github.com/ElektroStudios/PROJECT_NAME/pulls"><img src="https://img.shields.io/github/issues-pr/ElektroStudios/PROJECT_NAME" alt="Pull Requests"></a>
-    <a href="https://github.com/ElektroStudios/PROJECT_NAME/issues?q=is%3Aissue+is%3Aopen"><img src="https://img.shields.io/github/issues/ElektroStudios/PROJECT_NAME?color=blue" alt="Open Issues"></a><a href="https://github.com/ElektroStudios/PROJECT_NAME/issues?q=is%3Aissue+is%3Aclosed"><img src="https://img.shields.io/github/issues-closed/ElektroStudios/PROJECT_NAME?label=&color=28a745" alt="Closed Issues"></a>
-    <a href="https://github.com/ElektroStudios/PROJECT_NAME/pulse"><img src="https://img.shields.io/badge/maintained-yes-green.svg" alt="Maintenance"></a>
+    <a href="https://github.com/ElektroStudios/Fast-Image-Viewer/archive/refs/heads/main.zip"><img src="https://img.shields.io/github/repo-size/ElektroStudios/Fast-Image-Viewer" alt="Repo size"></a>
+    <a href="https://somsubhra.github.io/github-release-stats/?username=ElektroStudios&repository=Fast-Image-Viewer"><img src="https://img.shields.io/github/downloads/ElektroStudios/Fast-Image-Viewer/total.svg?label=total%20downloads" alt="Total Downloads"></a>
+    <a href="https://github.com/ElektroStudios/Fast-Image-Viewer/commits/main"><img src="https://img.shields.io/github/last-commit/ElektroStudios/Fast-Image-Viewer" alt="Last commit"></a>
+    <a href="https://github.com/ElektroStudios/Fast-Image-Viewer/pulls"><img src="https://img.shields.io/github/issues-pr/ElektroStudios/Fast-Image-Viewer" alt="Pull Requests"></a>
+    <a href="https://github.com/ElektroStudios/Fast-Image-Viewer/issues?q=is%3Aissue+is%3Aopen"><img src="https://img.shields.io/github/issues/ElektroStudios/Fast-Image-Viewer?color=blue" alt="Open Issues"></a><a href="https://github.com/ElektroStudios/Fast-Image-Viewer/issues?q=is%3Aissue+is%3Aclosed"><img src="https://img.shields.io/github/issues-closed/ElektroStudios/Fast-Image-Viewer?label=&color=28a745" alt="Closed Issues"></a>
+    <a href="https://github.com/ElektroStudios/Fast-Image-Viewer/pulse"><img src="https://img.shields.io/badge/maintained-yes-green.svg" alt="Maintenance"></a>
   <br>
   <br>
     <a href="https://en.wikipedia.org/wiki/Spanish_Empire"><img src="https://img.shields.io/badge/Made_in-Spain_%F0%9F%87%AA%F0%9F%87%B8-AA151B?style=flat" alt="Made in Spain"></a>
