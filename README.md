@@ -34,7 +34,7 @@ windowsapplication
   
   <h1>Fast Image Viewer (FIV)</h1>
 
-### A minimalist, high-performance image viewer written purely in VB.NET and powered by a smart background-caching engine for lag-free navigation.
+### A minimalist, high-performance image viewer written purely in VB.NET<br>and powered by a smart background-caching engine for lag-free navigation.
 
 </div>
 
