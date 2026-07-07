@@ -54,11 +54,11 @@ windowsapplication
     <a href="https://github.com/ElektroStudios/Fast-Image-Viewer/releases/latest"><img src="https://img.shields.io/github/v/release/ElektroStudios/Fast-Image-Viewer" alt="Latest Release"></a>
     <a href="https://learn.microsoft.com/en-us/dotnet/visual-basic/"><img src="https://img.shields.io/badge/language-VB.NET-purple.svg?logo=visualbasic" alt="Language"></a>
     <a href="https://learn.microsoft.com/en-us/windows/apps/"><img src="https://img.shields.io/badge/platform-Windows-lightgray.svg" alt="Platform"></a>
-    <a href="License.md"><img src="https://img.shields.io/github/license/ElektroStudios/Fast-Image-Viewer" alt="License"></a>
+    <a href="LICENSE"><img src="https://img.shields.io/github/license/ElektroStudios/Fast-Image-Viewer" alt="License"></a>
   <br>
-    <a href="https://github.com/ElektroStudios/Fast-Image-Viewer/archive/refs/heads/main.zip"><img src="https://img.shields.io/github/repo-size/ElektroStudios/Fast-Image-Viewer" alt="Repo size"></a>
+    <a href="https://api.github.com/repos/ElektroStudios/Fast-Image-Viewer/zipball"><img src="https://img.shields.io/github/repo-size/ElektroStudios/Fast-Image-Viewer" alt="Repo size"></a>
     <a href="https://somsubhra.github.io/github-release-stats/?username=ElektroStudios&repository=Fast-Image-Viewer"><img src="https://img.shields.io/github/downloads/ElektroStudios/Fast-Image-Viewer/total.svg?label=total%20downloads" alt="Total Downloads"></a>
-    <a href="https://github.com/ElektroStudios/Fast-Image-Viewer/commits/main"><img src="https://img.shields.io/github/last-commit/ElektroStudios/Fast-Image-Viewer" alt="Last commit"></a>
+    <a href="https://github.com/ElektroStudios/Fast-Image-Viewer/commits"><img src="https://img.shields.io/github/last-commit/ElektroStudios/Fast-Image-Viewer" alt="Last commit"></a>
     <a href="https://github.com/ElektroStudios/Fast-Image-Viewer/pulls"><img src="https://img.shields.io/github/issues-pr/ElektroStudios/Fast-Image-Viewer" alt="Pull Requests"></a>
     <a href="https://github.com/ElektroStudios/Fast-Image-Viewer/issues?q=is%3Aissue+is%3Aopen"><img src="https://img.shields.io/github/issues/ElektroStudios/Fast-Image-Viewer?color=blue" alt="Open Issues"></a><a href="https://github.com/ElektroStudios/Fast-Image-Viewer/issues?q=is%3Aissue+is%3Aclosed"><img src="https://img.shields.io/github/issues-closed/ElektroStudios/Fast-Image-Viewer?label=&color=28a745" alt="Closed Issues"></a>
     <a href="https://github.com/ElektroStudios/Fast-Image-Viewer/pulse"><img src="https://img.shields.io/badge/maintained-yes-green.svg" alt="Maintenance"></a>
