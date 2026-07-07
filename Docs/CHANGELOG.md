@@ -1,4 +1,4 @@
-# Fast Image Viewer (FIV) Change Log 📋
+﻿# Fast Image Viewer (FIV) Change Log 📋
 
 ## v1.0.1 **(current)** 🆕
 

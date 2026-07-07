@@ -1,4 +1,4 @@
-<!-- Common Project Tags:
+﻿<!-- Common Project Tags:
 desktop-app 
 desktop-application 
 dotnet 
@@ -152,15 +152,6 @@ Download the latest release by clicking [here](https://github.com/ElektroStudios
 
 Explore the complete list of changes, bug fixes, and improvements across different releases by clicking [here](/Docs/CHANGELOG.md).
 
-## 🏆 Credits
-
-This work relies on the following technologies, libraries or resources: 
-
- - [.NET Framework](https://dotnet.microsoft.com/en-us/download/dotnet-framework)
- - [Ookii.Dialogs](https://www.ookii.org/software/dialogs/)
- - [Anthropic Claude 4 Opus](https://claude.ai/) - Assisted in writing base code from scratch and refining core components.
- - [Google Gemini Pro 3.1](https://gemini.google.com/app) - Assisted in refining core components and adding new features.
-
 ## 💪 Contributing
 
 Your contribution is highly appreciated!. If you have any ideas, suggestions, or encounter issues, feel free to open an issue by clicking [here](https://github.com/ElektroStudios/Fast-Image-Viewer/issues/new/choose). 
@@ -183,6 +174,15 @@ This work is distributed for educational purposes and without any profit motive.
 </div>
 
 ------------------
+
+## 🏆 Credits
+
+This work relies on the following technologies, libraries or resources: 
+
+ - [.NET Framework](https://dotnet.microsoft.com/en-us/download/dotnet-framework)
+ - [Ookii.Dialogs](https://www.ookii.org/software/dialogs/)
+ - [Anthropic Claude 4 Opus](https://claude.ai/) - Assisted in writing base code from scratch and refining core components.
+ - [Google Gemini Pro 3.1](https://gemini.google.com/app) - Assisted in refining core components and adding new features.
 
 ## ⚠️ Disclaimer
 
