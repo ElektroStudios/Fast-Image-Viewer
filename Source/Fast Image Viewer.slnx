@@ -5,4 +5,7 @@
   <Project Path="Fast Image Viewer/Fast Image Viewer.vbproj" Id="2860b869-0e0e-420f-8288-469a4ecc44ac">
     <Platform Project="x64" />
   </Project>
+  <Project Path="Fast Image Viewer.Tests/Fast Image Viewer.Tests.vbproj">
+    <Platform Project="x64" />
+  </Project>
 </Solution>
