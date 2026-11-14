@@ -37,8 +37,8 @@ build_script:
   - msbuild "Source\%APP_DIR_NAME%.%SOLUTION_EXT%" /p:Configuration=%configuration% /maxcpucount
 
 test_script:
-  - dotnet test "Source\%APP_DIR_NAME%.Tests\%APP_DIR_NAME%.Tests.vbproj" -c %configuration% /p:Platform=x64
-  
+  - dotnet exec "Source\%APP_DIR_NAME%.Tests\bin\x64\%configuration%\net10.0\FastImageViewer.Tests.dll"
+
 after_build:
   - >-
     7z a -r "%APPVEYOR_PROJECT_NAME%_Build_%APPVEYOR_BUILD_NUMBER%.zip"
