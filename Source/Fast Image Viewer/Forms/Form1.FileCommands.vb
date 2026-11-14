@@ -19,7 +19,7 @@ Imports Ookii.Dialogs.WinForms
 
 
 ' Contains the form's filecommands event handlers.
-Partial Public NotInheritable Class Form1
+Partial Public NotInheritable Class Form1 ' NOSONAR
 
     Private Sub MenuStrip1_MenuActivate(sender As Object, e As EventArgs) Handles MainMenuStrip1.MenuActivate
         Dim hasImage As Boolean = Me.PicBox.Image IsNot Nothing
