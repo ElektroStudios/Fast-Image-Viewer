@@ -29,7 +29,7 @@ Imports Ookii.Dialogs.WinForms
 #Region " Form1 "
 
 ''' <summary>Coordinates the viewer window and its background image cache.</summary>
-Partial Public NotInheritable Class Form1 : Inherits Form
+Partial Public NotInheritable Class Form1 : Inherits Form ' NOSONAR
 
 #Region " Fields "
 

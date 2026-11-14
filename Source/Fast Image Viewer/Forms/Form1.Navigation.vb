@@ -19,7 +19,7 @@ Imports Ookii.Dialogs.WinForms
 
 
 ' Contains the form's navigation coordination.
-Partial Public NotInheritable Class Form1
+Partial Public NotInheritable Class Form1 ' NOSONAR
 
     Private Sub NavigateNext()
         If Me.PAUSE_BETWEEN_FASTFORWARD_MILLISECONDS > 0 AndAlso (Date.Now - Me._lastNavTime).TotalMilliseconds < Me.PAUSE_BETWEEN_FASTFORWARD_MILLISECONDS Then

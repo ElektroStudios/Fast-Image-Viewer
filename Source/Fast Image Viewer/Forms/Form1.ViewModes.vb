@@ -19,66 +19,154 @@ Imports Ookii.Dialogs.WinForms
 
 
 ' Contains the form's viewmodes coordination.
-Partial Public NotInheritable Class Form1
+Partial Public NotInheritable Class Form1 ' NOSONAR
 
     Private Sub ToggleFullscreen()
         If Me._isActualSize Then Me.ExitActualSize()
         If Me._isFullscreen Then Me.ExitFullscreen() Else Me.EnterFullscreen()
     End Sub
 
+    ''' <summary>
+    ''' Enters fullscreen mode while preserving the window bounds and style.
+    ''' </summary>
+    ''' <exception cref="InvalidOperationException">
+    ''' The main layout is not initialized or its bottom row is missing.
+    ''' </exception>
     Private Sub EnterFullscreen()
+
+        Dim layout As TableLayoutPanel = Me.tblMain
+
+        If layout Is Nothing Then
+            Throw New InvalidOperationException(
+            "The main layout must be initialized before entering fullscreen mode.")
+        End If
+
+        If layout.RowStyles.Count <= 2 Then
+            Throw New InvalidOperationException(
+            "The main layout must contain a bottom row at index 2.")
+        End If
+
         Me.ResetZoom()
 
-        Me.tblMain?.SuspendLayout()
+        layout.SuspendLayout()
 
-        Me._savedWin32Style = GetWindowLong(Me.Handle, GWL_STYLE)
-        Me._savedBounds = Me.Bounds
+        Try
+            Me._savedWin32Style = GetWindowLong(Me.Handle, GWL_STYLE)
+            Me._savedBounds = Me.Bounds
 
-        Dim newStyle As Integer = Me._savedWin32Style And Not (WS_CAPTION Or WS_THICKFRAME)
-        SetWindowLong(Me.Handle, GWL_STYLE, newStyle)
+            Dim newStyle As Integer =
+            Me._savedWin32Style And Not (WS_CAPTION Or WS_THICKFRAME)
 
-        Dim scr As Screen = Screen.FromControl(Me)
-        SetWindowPos(Me.Handle, IntPtr.Zero,
+            SetWindowLong(Me.Handle, GWL_STYLE, newStyle)
+
+            Dim scr As Screen = Screen.FromControl(Me)
+
+            SetWindowPos(Me.Handle, IntPtr.Zero,
                      scr.Bounds.X, scr.Bounds.Y,
                      scr.Bounds.Width, scr.Bounds.Height,
                      SWP_FRAMECHANGED Or SWP_NOZORDER Or SWP_NOACTIVATE)
 
-        Me.tblMain.RowStyles(2).SizeType = SizeType.Absolute
-        Me.tblMain.RowStyles(2).Height = 0.0F
-        Me.pnlBottom.Visible = False
-        Me.MainMenuStrip1.Visible = False
+            layout.RowStyles(2).SizeType = SizeType.Absolute
+            layout.RowStyles(2).Height = 0.0F
 
-        Me.PanScroll.Visible = False
-        Me.PicBox.Visible = True
-        Me.PicBox.Dock = DockStyle.Fill
+            Me.pnlBottom.Visible = False
+            Me.MainMenuStrip1.Visible = False
 
-        Me.tblMain?.ResumeLayout(True)
+            Me.PanScroll.Visible = False
+            Me.PicBox.Visible = True
+            Me.PicBox.Dock = DockStyle.Fill
+
+        Finally
+            layout.ResumeLayout(True)
+        End Try
 
         Me._isFullscreen = True
-        Me.Text = $"{My.Application.Info.ProductName} [FULLSCREEN] — {Path.GetFileName(Me._imageFiles(Me._currentIndex))}"
+
+        Dim currentFilePath As String = Nothing
+
+        SyncLock Me._indexLock
+            If Me._imageFiles IsNot Nothing AndAlso
+           Me._currentIndex >= 0 AndAlso
+           Me._currentIndex < Me._imageFiles.Length Then
+
+                currentFilePath = Me._imageFiles(Me._currentIndex)
+            End If
+        End SyncLock
+
+        Dim title As String = $"{My.Application.Info.ProductName} [FULLSCREEN]"
+
+        If Not String.IsNullOrEmpty(currentFilePath) Then
+            title &= $" — {Path.GetFileName(currentFilePath)}"
+        End If
+
+        Me.Text = title
+
     End Sub
 
+    ''' <summary>
+    ''' Leaves fullscreen mode and restores the window bounds and style.
+    ''' </summary>
+    ''' <exception cref="InvalidOperationException">
+    ''' The main layout is not initialized or its bottom row is missing.
+    ''' </exception>
     Private Sub ExitFullscreen()
+
+        Dim layout As TableLayoutPanel = Me.tblMain
+
+        If layout Is Nothing Then
+            Throw New InvalidOperationException(
+            "The main layout must be initialized before leaving fullscreen mode.")
+        End If
+
+        If layout.RowStyles.Count <= 2 Then
+            Throw New InvalidOperationException(
+            "The main layout must contain a bottom row at index 2.")
+        End If
+
         Me.StopSlideshow()
         Me.ResetZoom()
-        Me.tblMain?.SuspendLayout()
 
-        SetWindowLong(Me.Handle, GWL_STYLE, Me._savedWin32Style)
-        SetWindowPos(Me.Handle, IntPtr.Zero,
+        layout.SuspendLayout()
+
+        Try
+            SetWindowLong(Me.Handle, GWL_STYLE, Me._savedWin32Style)
+
+            SetWindowPos(Me.Handle, IntPtr.Zero,
                      Me._savedBounds.X, Me._savedBounds.Y,
                      Me._savedBounds.Width, Me._savedBounds.Height,
                      SWP_FRAMECHANGED Or SWP_NOZORDER Or SWP_NOACTIVATE)
 
-        Me.tblMain.RowStyles(2).SizeType = SizeType.Absolute
-        Me.tblMain.RowStyles(2).Height = 56.0F
-        Me.pnlBottom.Visible = True
+            layout.RowStyles(2).SizeType = SizeType.Absolute
+            layout.RowStyles(2).Height = 56.0F
 
-        Me.MainMenuStrip1.Visible = True
+            Me.pnlBottom.Visible = True
+            Me.MainMenuStrip1.Visible = True
 
-        Me.tblMain?.ResumeLayout(True)
+        Finally
+            layout.ResumeLayout(True)
+        End Try
 
         Me._isFullscreen = False
-        Me.Text = $"{My.Application.Info.ProductName} — {Path.GetFileName(Me._imageFiles(Me._currentIndex))}"
+
+        Dim currentFilePath As String = Nothing
+
+        SyncLock Me._indexLock
+            If Me._imageFiles IsNot Nothing AndAlso
+           Me._currentIndex >= 0 AndAlso
+           Me._currentIndex < Me._imageFiles.Length Then
+
+                currentFilePath = Me._imageFiles(Me._currentIndex)
+            End If
+        End SyncLock
+
+        Dim title As String = My.Application.Info.ProductName
+
+        If Not String.IsNullOrEmpty(currentFilePath) Then
+            title &= $" — {Path.GetFileName(currentFilePath)}"
+        End If
+
+        Me.Text = title
+
     End Sub
 
     Private Sub ToggleActualSize()

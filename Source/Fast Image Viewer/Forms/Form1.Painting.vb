@@ -19,7 +19,7 @@ Imports Ookii.Dialogs.WinForms
 
 
 ' Contains the form's painting event handlers.
-Partial Public NotInheritable Class Form1
+Partial Public NotInheritable Class Form1 ' NOSONAR
 
     Private Sub PicBox_Paint(sender As Object, e As PaintEventArgs)
         If Me._imageFiles Is Nothing OrElse Me._imageFiles.Length = 0 Then

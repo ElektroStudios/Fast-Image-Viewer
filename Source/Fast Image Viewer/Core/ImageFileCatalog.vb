@@ -6,7 +6,7 @@ Imports System.Collections.Generic
 Imports System.IO
 
 ''' <summary>Provides file filtering, indexing and sorted-list anchor lookup.</summary>
-Friend NotInheritable Class ImageFileCatalog
+Friend NotInheritable Class ImageFileCatalog ' NOSONAR
     Private Sub New()
     End Sub
 

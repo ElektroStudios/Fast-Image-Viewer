@@ -31,7 +31,7 @@ install:
 before_build:
   - dotnet nuget locals all --clear
   - >-
-    nuget restore "Source\%APP_DIR_NAME%.%SOLUTION_EXT%"
+    dotnet restore "Source\%APP_DIR_NAME%.%SOLUTION_EXT%"
 
 build_script:
   - msbuild "Source\%APP_DIR_NAME%.%SOLUTION_EXT%" /p:Configuration=%configuration% /maxcpucount

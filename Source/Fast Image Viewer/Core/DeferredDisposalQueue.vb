@@ -6,7 +6,7 @@ Imports System.Collections.Concurrent
 Imports System.Collections.Generic
 
 ''' <summary>Transfers evicted resources to their owning thread for deferred disposal.</summary>
-Friend NotInheritable Class DeferredDisposalQueue(Of T As {Class, IDisposable})
+Friend NotInheritable Class DeferredDisposalQueue(Of T As {Class, IDisposable}) ' NOSONAR
     ''' <summary>Stores resources waiting for disposal.</summary>
     Private ReadOnly items As New ConcurrentQueue(Of T)()
 

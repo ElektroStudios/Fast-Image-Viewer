@@ -327,13 +327,34 @@ Partial Public NotInheritable Class Form1
 
         Dim filePath As String = Me._imageFiles(Me._currentIndex)
 
-        If Not File.Exists(filePath) Then
-            Throw New FileNotFoundException("The current image file no longer exists.", filePath)
+        ' Validate the target file path
+        If String.IsNullOrWhiteSpace(filePath) Then
+            Throw New InvalidOperationException("The retrieved file path is null, empty, or consists only of white-space characters.")
         End If
 
-        Dim startInfo As New ProcessStartInfo("explorer.exe", $"/select,""{filePath}""") With {
+        If Not File.Exists(filePath) Then
+            Throw New FileNotFoundException($"The current image file no longer exists: {filePath}", filePath)
+        End If
+
+        ' Resolve the absolute path for explorer.exe to satisfy SonarQube and prevent path hijacking
+        Dim windowsDirectory As String = Environment.GetFolderPath(Environment.SpecialFolder.Windows)
+
+        If String.IsNullOrWhiteSpace(windowsDirectory) Then
+            Throw New PlatformNotSupportedException("Cannot determine the Windows installation directory.")
+        End If
+
+        Dim explorerPath As String = Path.Combine(windowsDirectory, "explorer.exe")
+
+        ' Defensive check for the critical system executable
+        If Not File.Exists(explorerPath) Then
+            Throw New FileNotFoundException($"The executable for Windows Explorer was not found at the expected absolute path: {explorerPath}", explorerPath)
+        End If
+
+        ' Initialize and start the process safely
+        Dim startInfo As ProcessStartInfo = New ProcessStartInfo(explorerPath, $"/select,""{filePath}""") With {
             .UseShellExecute = True
         }
+
         Process.Start(startInfo)
     End Sub
 

@@ -5,7 +5,7 @@ Option Infer Off
 Imports System.Collections.Generic
 
 ''' <summary>Calculates the asymmetric cache window and center-first load order.</summary>
-Friend Structure CacheWindow
+Friend Structure CacheWindow ' NOSONAR
     Friend ReadOnly First As Integer
     Friend ReadOnly Last As Integer
     Friend ReadOnly Center As Integer

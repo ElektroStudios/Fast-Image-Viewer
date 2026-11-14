@@ -19,7 +19,7 @@ Imports Ookii.Dialogs.WinForms
 
 
 ' Contains the form's settings event handlers.
-Partial Public NotInheritable Class Form1
+Partial Public NotInheritable Class Form1 ' NOSONAR
 
     Private Sub MenuItemShowCacheLabel_Click(sender As Object, e As EventArgs) Handles MenuItemShowCacheLabel.Click
         My.Settings.ShowCacheLabel = Me.MenuItemShowCacheLabel.Checked

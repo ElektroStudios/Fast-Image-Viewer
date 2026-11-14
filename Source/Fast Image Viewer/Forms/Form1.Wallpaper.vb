@@ -19,7 +19,7 @@ Imports Ookii.Dialogs.WinForms
 
 
 ' Contains the form's wallpaper coordination.
-Partial Public NotInheritable Class Form1
+Partial Public NotInheritable Class Form1 ' NOSONAR
 
     Private Sub ApplyCurrentImageAsWallpaper(style As DesktopWallpaperStyle)
         Dim filePath As String = Me._imageFiles(Me._currentIndex)

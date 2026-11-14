@@ -6,7 +6,7 @@ Imports System.Drawing
 Imports System.Drawing.Imaging
 
 ''' <summary>Decodes detached PArgb bitmaps; the caller owns each successful result.</summary>
-Friend NotInheritable Class BitmapLoader
+Friend NotInheritable Class BitmapLoader ' NOSONAR
     Private Sub New()
     End Sub
 

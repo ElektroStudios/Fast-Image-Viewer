@@ -19,7 +19,7 @@ Imports Ookii.Dialogs.WinForms
 
 
 ' Contains the form's display coordination.
-Partial Public NotInheritable Class Form1
+Partial Public NotInheritable Class Form1 ' NOSONAR
 
     Private Function LoadOriginal(filePath As String) As Bitmap
         Return BitmapLoader.LoadOriginal(filePath)

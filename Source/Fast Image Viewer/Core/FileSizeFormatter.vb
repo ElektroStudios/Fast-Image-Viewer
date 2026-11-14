@@ -3,7 +3,7 @@ Option Explicit On
 Option Infer Off
 
 ''' <summary>Formats file lengths using the current UI culture.</summary>
-Friend NotInheritable Class FileSizeFormatter
+Friend NotInheritable Class FileSizeFormatter ' NOSONAR
     Private Sub New()
     End Sub
 

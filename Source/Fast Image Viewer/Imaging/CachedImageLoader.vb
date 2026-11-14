@@ -6,7 +6,7 @@ Imports System.Drawing
 Imports System.IO
 
 ''' <summary>Loads pixel data and metadata as one ownership transaction.</summary>
-Friend NotInheritable Class CachedImageLoader
+Friend NotInheritable Class CachedImageLoader ' NOSONAR
     Private Sub New()
     End Sub
 

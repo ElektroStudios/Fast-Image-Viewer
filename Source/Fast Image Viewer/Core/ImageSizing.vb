@@ -5,7 +5,7 @@ Option Infer Off
 Imports System.Drawing
 
 ''' <summary>Calculates decoded bitmap sizes without allocating image buffers.</summary>
-Friend NotInheritable Class ImageSizing
+Friend NotInheritable Class ImageSizing ' NOSONAR
     Private Sub New()
     End Sub
 

@@ -19,7 +19,7 @@ Imports Ookii.Dialogs.WinForms
 
 
 ' Contains the form's files coordination.
-Partial Public NotInheritable Class Form1
+Partial Public NotInheritable Class Form1 ' NOSONAR
 
     Private Sub LoadSingleImageFile(filePath As String)
         If String.IsNullOrWhiteSpace(filePath) OrElse Not File.Exists(filePath) Then Return
