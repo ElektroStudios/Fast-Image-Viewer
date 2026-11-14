@@ -1,6 +1,15 @@
 ﻿# Fast Image Viewer (FIV) Change Log 📋
 
-## v1.0.1 **(current)** 🆕
+## v1.0.2 **(current)** 🆕
+
+### Bug Fixes
+- Prevented zero-sized destination bitmaps when fitting extremely narrow or tall images.
+- Released source and destination bitmaps when decoding, drawing or metadata retrieval fails.
+- Handled metadata read failures in background demand loads without an unhandled thread-pool exception.
+- Reused the active cache worker when refreshing a directory after deleting or moving an image.
+- Invalidated pending display requests when clearing the cache.
+
+## v1.0.1
 
 My goal with this update is simple: keep turning **FIV** into the image viewer I'd actually want to use every day. ✅
 
