@@ -312,6 +312,24 @@ Partial Public NotInheritable Class Form1 : Inherits Form ' NOSONAR
         MyBase.OnKeyDown(e)
     End Sub
 
+    ''' <summary>
+    ''' Resets the navigation throttle when a navigation key is released.
+    ''' </summary>
+    ''' <param name="e">The key event arguments.</param>
+    Protected Overrides Sub OnKeyUp(e As KeyEventArgs)
+
+        Select Case e.KeyCode
+            Case Keys.PageDown, Keys.PageUp, Keys.Back,
+                 Keys.Left, Keys.Right
+
+                Me._lastNavTime = Date.MinValue
+
+        End Select
+
+        MyBase.OnKeyUp(e)
+
+    End Sub
+
 #End Region
 
 #Region " Event Handlers "

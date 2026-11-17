@@ -22,12 +22,13 @@ Imports Ookii.Dialogs.WinForms
 Partial Public NotInheritable Class Form1 ' NOSONAR
 
     Private Sub NavigateNext()
-        If Me.PAUSE_BETWEEN_FASTFORWARD_MILLISECONDS > 0 AndAlso (Date.Now - Me._lastNavTime).TotalMilliseconds < Me.PAUSE_BETWEEN_FASTFORWARD_MILLISECONDS Then
+
+        If Me.PAUSE_BETWEEN_FASTFORWARD_MILLISECONDS > 0 AndAlso
+           (Date.Now - Me._lastNavTime).TotalMilliseconds < Me.PAUSE_BETWEEN_FASTFORWARD_MILLISECONDS Then
             Return
         End If
-        Me._lastNavTime = Date.Now
 
-        If Not iscurrentimagedisplayed Then
+        If Not Me.iscurrentimagedisplayed Then
             Return
         End If
 
@@ -39,20 +40,25 @@ Partial Public NotInheritable Class Form1 ' NOSONAR
             Return
         End If
 
+        Me._lastNavTime = Date.Now
+
         SyncLock Me._indexLock
             Me._currentIndex += 1
         End SyncLock
+
         Me.iscurrentimagedisplayed = False
         Me.ScheduleDisplay()
+
     End Sub
 
     Private Sub NavigatePrev()
-        If Me.PAUSE_BETWEEN_FASTFORWARD_MILLISECONDS > 0 AndAlso (Date.Now - Me._lastNavTime).TotalMilliseconds < Me.PAUSE_BETWEEN_FASTFORWARD_MILLISECONDS Then
+
+        If Me.PAUSE_BETWEEN_FASTFORWARD_MILLISECONDS > 0 AndAlso
+           (Date.Now - Me._lastNavTime).TotalMilliseconds < Me.PAUSE_BETWEEN_FASTFORWARD_MILLISECONDS Then
             Return
         End If
-        Me._lastNavTime = Date.Now
 
-        If Not iscurrentimagedisplayed Then
+        If Not Me.iscurrentimagedisplayed Then
             Return
         End If
 
@@ -64,11 +70,15 @@ Partial Public NotInheritable Class Form1 ' NOSONAR
             Return
         End If
 
+        Me._lastNavTime = Date.Now
+
         SyncLock Me._indexLock
             Me._currentIndex -= 1
         End SyncLock
+
         Me.iscurrentimagedisplayed = False
         Me.ScheduleDisplay()
+
     End Sub
 
     Private Sub NavigateFirst()

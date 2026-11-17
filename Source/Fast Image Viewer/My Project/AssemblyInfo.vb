@@ -29,8 +29,8 @@ Imports System.Runtime.InteropServices
 '      Revision
 '
 
-<Assembly: AssemblyVersion("1.0.2.0")>
-<Assembly: AssemblyFileVersion("1.0.2.0")>
+<Assembly: AssemblyVersion("1.0.3.0")>
+<Assembly: AssemblyFileVersion("1.0.3.0")>
 <Assembly: NeutralResourcesLanguage("en")>
 
 <Assembly: System.Runtime.CompilerServices.InternalsVisibleTo("FastImageViewer.Tests")>
