@@ -36,39 +36,43 @@ Partial Public NotInheritable Class Form1 ' NOSONAR
 
         ' ── Menu strip ──────────────────────────────────────────────
         Me.MenuItemOpenFile = New ToolStripMenuItem("Open &file...") With {
-            .Image = My.Resources.Resource1.openfile
+            .Image = My.Resources.Resource1.openfile,
+            .ShortcutKeys = Keys.Control Or Keys.O
         }
 
         Me.MenuItemCopyFileTo = New ToolStripMenuItem("&Copy file to...") With {
-            .Image = My.Resources.Resource1.copyto
+            .Image = My.Resources.Resource1.copyto,
+            .ShortcutKeys = Keys.Control Or Keys.Shift Or Keys.C
         }
 
         Me.MenuItemSaveAs = New ToolStripMenuItem("&Save file as...") With {
-            .Image = My.Resources.Resource1.saveas
+            .Image = My.Resources.Resource1.saveas,
+            .ShortcutKeys = Keys.Control Or Keys.Shift Or Keys.S
         }
 
         Me.MenuItemOpenDirectory = New ToolStripMenuItem("Open &directory") With {
-            .Image = My.Resources.Resource1.openfolder
+            .Image = My.Resources.Resource1.openfolder,
+            .ShortcutKeys = Keys.Control Or Keys.Shift Or Keys.O
         }
 
         Me.MenuItemCloseCurrentDirectory = New ToolStripMenuItem("Close c&urrent directory") With {
-            .Image = My.Resources.Resource1.closefolder
+            .Image = My.Resources.Resource1.closefolder,
+            .ShortcutKeys = Keys.Control Or Keys.W
         }
 
         Me.MenuItemSendAllToRecycleBin = New ToolStripMenuItem("Send all loaded files to &recycle bin") With {
-            .Image = My.Resources.Resource1.recycle
+            .Image = My.Resources.Resource1.recycle,
+            .ShortcutKeys = Keys.Control Or Keys.Shift Or Keys.Delete
         }
 
         Me.MenuItemShowInExplorer = New ToolStripMenuItem("Show file in &Explorer...") With {
-            .Image = Nothing
-        }
-
-        Me.MenuItemOpenFile = New ToolStripMenuItem("Open &file...") With {
-            .Image = My.Resources.Resource1.openfile
+            .Image = Nothing,
+            .ShortcutKeys = Keys.Control Or Keys.E
         }
 
         Me.MenuItemExit = New ToolStripMenuItem("Close &application") With {
-            .Image = My.Resources.Resource1._exit
+            .Image = My.Resources.Resource1._exit,
+            .ShortcutKeyDisplayString = "Alt+F4"
         }
 
         Dim fileMenu As New ToolStripMenuItem("&File")
@@ -168,7 +172,7 @@ Partial Public NotInheritable Class Form1 ' NOSONAR
         }
         Me.MenuItemWallpaperFill = New ToolStripMenuItem("&Fill")
         Me.MenuItemWallpaperFit = New ToolStripMenuItem("F&it")
-        Me.MenuItemWallpaperStretch = New ToolStripMenuItem("S&tretch")
+        Me.MenuItemWallpaperStretch = New ToolStripMenuItem("&Stretch")
         Me.MenuItemWallpaperTile = New ToolStripMenuItem("&Tile")
         Me.MenuItemWallpaperCenter = New ToolStripMenuItem("&Center")
         Me.MenuItemWallpaperSpan = New ToolStripMenuItem("S&pan")
@@ -179,6 +183,15 @@ Partial Public NotInheritable Class Form1 ' NOSONAR
         Me.MenuItemSetWallpaper.DropDownItems.Add(Me.MenuItemWallpaperTile)
         Me.MenuItemSetWallpaper.DropDownItems.Add(Me.MenuItemWallpaperCenter)
         Me.MenuItemSetWallpaper.DropDownItems.Add(Me.MenuItemWallpaperSpan)
+
+        ' Display the existing unmodified keys without registering duplicate shortcuts.
+        Me.MenuItemZoomIn.ShortcutKeyDisplayString = "+"
+        Me.MenuItemZoomOut.ShortcutKeyDisplayString = "-"
+        Me.MenuItemRotateLeft.ShortcutKeyDisplayString = "L"
+        Me.MenuItemRotateRight.ShortcutKeyDisplayString = "R"
+        Me.MenuItemResetZoom.ShortcutKeys = Keys.Control Or Keys.D0
+        Me.MenuItemResetOrientation.ShortcutKeys = Keys.Control Or Keys.Shift Or Keys.D0
+        Me.MenuItemResetOrientation.Text = "Reset Orient&ation"
 
         Dim imageMenu As New ToolStripMenuItem("&Image")
         imageMenu.DropDownItems.Add(Me.MenuItemZoomIn)
@@ -192,10 +205,13 @@ Partial Public NotInheritable Class Form1 ' NOSONAR
         imageMenu.DropDownItems.Add(Me.MenuItemSetWallpaper)
         AddHandler Me.MenuItemZoomIn.Click, Sub(sender As Object, e As EventArgs) Me.AdjustZoom(0.1)
         AddHandler Me.MenuItemZoomOut.Click, Sub(sender As Object, e As EventArgs) Me.AdjustZoom(-0.1)
-        AddHandler Me.MenuItemResetZoom.Click, Sub(sender As Object, e As EventArgs) Me.ResetZoom()
+        AddHandler Me.MenuItemResetZoom.Click, Sub(sender As Object, e As EventArgs)
+                                                  If Me.PicBox.Image IsNot Nothing Then Me.ResetZoom()
+                                              End Sub
         AddHandler Me.MenuItemRotateLeft.Click, Sub(sender As Object, e As EventArgs) Me.RotateImage(False)
         AddHandler Me.MenuItemRotateRight.Click, Sub(sender As Object, e As EventArgs) Me.RotateImage(True)
         AddHandler Me.MenuItemResetOrientation.Click, Sub(sender As Object, e As EventArgs)
+                                                          If Me._rotationAngle = 0 Then Return
                                                           Me._rotationAngle = 90
                                                           Me.RotateImage(False)
                                                       End Sub
@@ -246,7 +262,9 @@ Partial Public NotInheritable Class Form1 ' NOSONAR
         AddHandler Me.NumFastForwardPauseCtrl.ValueChanged, AddressOf Me.NumFastForwardPauseCtrl_ValueChanged
 
         Me.MenuItemSlideshow = New ToolStripMenuItem("&Slideshow")
-        Me.MenuItemStartSlideshow = New ToolStripMenuItem("&Start Slideshow")
+        Me.MenuItemStartSlideshow = New ToolStripMenuItem("&Start Slideshow") With {
+            .ShortcutKeys = Keys.F5
+        }
 
         Me.NumSlideshowIntervalCtrl = New NumericUpDown With {
             .Minimum = 1,

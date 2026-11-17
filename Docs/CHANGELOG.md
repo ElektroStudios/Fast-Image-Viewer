@@ -1,6 +1,18 @@
 ﻿# Fast Image Viewer (FIV) Change Log 📋
 
-## v1.0.2 **(current)** 🆕
+## v1.0.3 **(current)** 🆕
+
+### Bug Fixes
+
+- Fixed an issue where the configured "Pause between fast forward (ms)" delay persisted after releasing a navigation key, causing subsequent key presses to be ignored until the delay expired.
+- Fixed unsuccessful navigation attempts unnecessarily resetting the navigation delay.
+
+### Improvements
+
+- Improved keyboard navigation responsiveness when switching between forward and backward navigation.
+- The configured navigation delay now resets immediately upon releasing a navigation key, while remaining effective during continuous key presses.
+
+## v1.0.2 🔄
 
 ### Bug Fixes
 - Prevented zero-sized destination bitmaps when fitting extremely narrow or tall images.
@@ -9,7 +21,7 @@
 - Reused the active cache worker when refreshing a directory after deleting or moving an image.
 - Invalidated pending display requests when clearing the cache.
 
-## v1.0.1
+## v1.0.1 🔄
 
 My goal with this update is simple: keep turning **FIV** into the image viewer I'd actually want to use every day. ✅
 

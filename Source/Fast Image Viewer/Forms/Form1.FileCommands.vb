@@ -39,6 +39,31 @@ Partial Public NotInheritable Class Form1 ' NOSONAR
     End Sub
 
     ''' <summary>
+    ''' Restores shortcut availability when the menu is dismissed.
+    ''' </summary>
+    ''' <param name="sender">The menu strip.</param>
+    ''' <param name="e">The event arguments.</param>
+    Private Sub MenuStrip1_MenuDeactivate(sender As Object, e As EventArgs) Handles MainMenuStrip1.MenuDeactivate
+        Me.MenuItemCopyFileTo.Enabled = True
+        Me.MenuItemSaveAs.Enabled = True
+        Me.MenuItemCloseCurrentDirectory.Enabled = True
+        Me.MenuItemSendAllToRecycleBin.Enabled = True
+        Me.MenuItemShowInExplorer.Enabled = True
+        Me.MenuItemResetZoom.Enabled = True
+        Me.MenuItemResetOrientation.Enabled = True
+    End Sub
+
+    ''' <summary>
+    ''' Checks the original image prerequisite and validates the selected file index.
+    ''' </summary>
+    ''' <returns>True if an image is present and the selected file index is valid.</returns>
+    Private Function CanExecuteCurrentImageCommand() As Boolean
+        Return Me.PicBox.Image IsNot Nothing AndAlso
+               Me._currentIndex >= 0 AndAlso
+               Me._currentIndex < Me._imageFiles.Length
+    End Function
+
+    ''' <summary>
     ''' Opens a modern Vista-style folder browser (OokiiDialogs) and
     ''' reloads the viewer with the chosen directory.
     ''' </summary>
@@ -174,6 +199,8 @@ Partial Public NotInheritable Class Form1 ' NOSONAR
 
     Private Sub MenuItemCopyFileTo_Click(sender As Object, e As EventArgs) Handles MenuItemCopyFileTo.Click
 
+        If Not Me.CanExecuteCurrentImageCommand() Then Return
+
         Dim getcachedimg As CachedImage = Nothing
         If Not Me._cache.TryGetValue(Me._imageFiles(Me._currentIndex), getcachedimg) Then
             MessageBox.Show("No image loaded.", "Save Image", MessageBoxButtons.OK, MessageBoxIcon.Warning)
@@ -234,6 +261,8 @@ Partial Public NotInheritable Class Form1 ' NOSONAR
     End Sub
 
     Private Sub MenuItemSaveAs_Click(sender As Object, e As EventArgs) Handles MenuItemSaveAs.Click
+
+        If Not Me.CanExecuteCurrentImageCommand() Then Return
 
         Dim getcachedimg As CachedImage = Nothing
         If Not Me._cache.TryGetValue(Me._imageFiles(Me._currentIndex), getcachedimg) Then
@@ -324,6 +353,8 @@ Partial Public NotInheritable Class Form1 ' NOSONAR
     End Sub
 
     Private Sub MenuItemShowInExplorer_Click(sender As Object, e As EventArgs) Handles MenuItemShowInExplorer.Click
+
+        If Not Me.CanExecuteCurrentImageCommand() Then Return
 
         Dim filePath As String = Me._imageFiles(Me._currentIndex)
 

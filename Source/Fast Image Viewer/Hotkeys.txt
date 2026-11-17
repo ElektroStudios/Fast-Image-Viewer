@@ -6,6 +6,17 @@ FIV is designed to be fully controlled via keyboard for maximum comfort:
 
   KEY / INPUT                             ACTION
 -------------------------------------------------------------------------------
+  Ctrl + O                            |  Open image file
+  Ctrl + Shift + O                    |  Open directory
+  Ctrl + Shift + C                    |  Copy current file to another location
+  Ctrl + Shift + S                    |  Save current image as
+  Ctrl + W                            |  Close current directory
+  Ctrl + E                            |  Show current file in Explorer
+  Ctrl + Shift + Delete               |  Send all loaded files to Recycle Bin
+  Alt + F4                            |  Close application
+  Ctrl + 0                            |  Reset zoom
+  Ctrl + Shift + 0                    |  Reset image orientation
+  F5                                  |  Start / Stop slideshow
   Right Arrow / PageDown              |  Next image
   Left Arrow / PageUp / Backspace     |  Previous image
   Home / End                          |  Jump to First / Last image

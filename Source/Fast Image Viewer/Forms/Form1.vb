@@ -54,7 +54,7 @@ Partial Public NotInheritable Class Form1 : Inherits Form ' NOSONAR
     Private _screenWidth As Integer = SystemInformation.PrimaryMonitorSize.Width
     Private _screenHeight As Integer = SystemInformation.PrimaryMonitorSize.Height
 
-    Private _renderedIndex As Integer = -1
+    'Private _renderedIndex As Integer = -1 ' UNUSED
 
     Private _rotationAngle As Integer = 0
 
