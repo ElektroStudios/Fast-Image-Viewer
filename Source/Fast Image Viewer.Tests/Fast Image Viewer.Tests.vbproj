@@ -24,7 +24,7 @@
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <ProjectReference Include="../Fast Image Viewer/Fast Image Viewer.vbproj" GlobalPropertiesToRemove="TargetFrameworks" />
+    <ProjectReference Include="..\Fast Image Viewer\Fast Image Viewer.vbproj" GlobalPropertiesToRemove="TargetFrameworks" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' != 'net48'">
     <Compile Include="../Fast Image Viewer/Core/*.vb" Link="Production/%(Filename)%(Extension)" />

@@ -81,6 +81,8 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="AppGlobals.vb" />
+    <Compile Include="Rendering\DarkModeColorTable.vb" />
+    <Compile Include="Rendering\DarkModeToolStripRenderer.vb" />
     <Compile Include="Core\ImageSizing.vb" />
     <Compile Include="Core\CacheWindow.vb" />
     <Compile Include="Core\ImageFileCatalog.vb" />

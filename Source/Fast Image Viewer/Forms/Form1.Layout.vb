@@ -1,4 +1,4 @@
-Option Strict On
+﻿Option Strict On
 Option Explicit On
 Option Infer Off
 
@@ -11,6 +11,8 @@ Imports System.IO
 Imports System.Runtime.InteropServices
 Imports System.Threading
 Imports System.Windows.Forms
+
+Imports Fast_Image_Viewer
 
 Imports Microsoft.VisualBasic.FileIO
 Imports Microsoft.Win32
@@ -235,7 +237,7 @@ Partial Public NotInheritable Class Form1 ' NOSONAR
 
         Me.MenuItemAdvanced = New ToolStripMenuItem("Ad&vanced")
         Me.MenuItemAdvancedWarning = New ToolStripLabel("If unsure, do not change anything!") With {
-            .ForeColor = Color.Red,
+            .ForeColor = Color.LightCoral,
             .Font = New Font("Segoe UI", 9.0F, FontStyle.Bold)
         }
 
@@ -297,8 +299,8 @@ Partial Public NotInheritable Class Form1 ' NOSONAR
         Me.MainMenuStrip1.Items.Add(optionsMenu)
         Me.MainMenuStrip1.Items.Add(Me.MenuItemAdvanced)
         Me.MainMenuStrip1.Items.Add(aboutMenu)
-        Me.MainMenuStrip1.BackColor = Color.FromArgb(30, 30, 30)
-        Me.MainMenuStrip1.ForeColor = SystemColors.ControlDark
+        Dim menuRenderer As New DarkModeToolStripRenderer()
+        menuRenderer.ApplyTo(Me.MainMenuStrip1)
 
         Me.MainMenuStrip = Me.MainMenuStrip1
         ' ────────────────────────────────────────────────────────────

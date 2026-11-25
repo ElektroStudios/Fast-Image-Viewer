@@ -1,6 +1,13 @@
 ﻿# Fast Image Viewer (FIV) Change Log 📋
 
-## v1.0.3 **(current)** 🆕
+## v1.0.4 **(current)** 🆕
+
+### Improvements
+
+- Added a Dark Mode renderer for MenuStrip, ToolStrip, and ContextMenuStrip with flat highlights, single-pixel separators, and custom checkmarks.
+- Applied the renderer to the main menu and its submenus.
+
+## v1.0.3 🔄
 
 ### Bug Fixes
 
